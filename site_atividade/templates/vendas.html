@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container theme-showcase" role="main">
+        <br>
+        <div class="page-header">
+            <h2 class="box-title col-md-12">Realizar Venda</h2>
+        </div>
+
+        <br>
+
+
+        <form method="post" action="{{ url_for('vendas') }}">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                <label for="{{ form.produto_id.id }}">Código do Produto:</label>
+                {{ form.produto_id(class_='form-control', placeholder='Código do Produto') }}
+            </div>
+
+            <br>
+
+            <div class="form-group">
+                <label for="{{ form.quantidade.id }}">Quantidade:</label>
+                {{ form.quantidade(class_='form-control', placeholder='Quantidade') }}
+            </div>
+
+            <br>
+
+            <button type="submit" class="btn btn-Secondary">Confirmar</button>
+        </form>
+
+
+
+        <br>
+        <table class="table table-hover" overflow="scroll">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nome do Produto</th>
+                    <th>Preço unitário</th>
+                    <th>Quantidade Vendida</th>
+                    <th>Valor total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for venda in vendas %}
+                <tr>
+                    <td>{{ venda.produto.id_produtos }}</td>
+                    <td>{{ venda.produto.produto }}</td>
+                    <td>{{ venda.produto.preco }}</td>
+                    <td>{{ venda.quantidade }}</td>
+                    <td>{{ venda.total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+
+        <div class="form-group">
+            <form method="post" action="{{ url_for('pagamento') }}" class="d-inline-block">
+                <button type="submit" class="btn btn-secondary">Efetivar Venda</button>
+            </form>
+
+            <form method="post" action="{{ url_for('vendas') }}" class="d-inline-block">
+                <input type="hidden" name="LimparVendas" value="sim">
+                <button type="submit" class="btn btn-danger">Limpar Vendas</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container theme-showcase" role="main">
+        <br>
+        <div class="page-header">
+            <h2 class="box-title col-md-12">Confirmação de Pagamento</h2>
+        </div>
+
+        <br>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Método de Pagamento: {{ pagamento.metodo_pagamento }}</h4>
+                <p class="card-text">Valor Pago: R$ {{ pagamento.valor_pagamento }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Troco: R$ {{ '{:.2f}'.format(pagamento.troco) }}</h4>
+                <p class="card-text">Data do Pagamento: {{ pagamento.data_pagamento.strftime('%d/%m/%Y %H:%M:%S') }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+{% endblock %}
+
+

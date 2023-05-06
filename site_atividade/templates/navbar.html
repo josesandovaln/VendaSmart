@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-Warning bg-Warning static-top">
+  <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="{{ url_for('static', filename='image/logo2.svg') }}" alt="logo" height="50">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto">
+          {% if current_user.is_authenticated %}
+          <li class="nav-item h4">
+              <a class="nav-link " aria-current="page" href="{{ url_for('vendas') }}">
+                  PDV
+              </a>
+          </li>
+          <li class="nav-item h4">
+              <a class="nav-link " aria-current="page" href="{{ url_for('produtos') }}">
+                  Produto
+              </a>
+          </li>
+          <li class="nav-item h4">
+              <a class="nav-link" aria-current="page" href="{{ url_for('cadastro_usuario') }}">
+                  Cadastro Usuário
+              </a>
+          </li>
+          <li class="nav-item h4">
+              <a class="nav-link" aria-current="page" href="{{ url_for('logout') }}">
+                  Logout
+              </a>
+          </li>
+          {% else %}
+          <li class="nav-item h4">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('login') }}">
+                  Login
+              </a>
+          </li>
+          {% endif %}
+      </ul>
+      </div>
+  </div>
+</nav>

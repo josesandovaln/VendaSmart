@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        <br>
+        <h2>Cadastrar novo produto</h2>
+        <form method="POST" action="{{ url_for('novo_produto') }}">
+            <br>
+            <div class="form-group">
+                <label for="produto">Produto:</label>
+                <input type="text" name="produto" class="form-control" id="produto" placeholder="Digite o nome do produto" required>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="preco">Preço:</label>
+                <input type="number" name="preco" class="form-control" id="preco" placeholder="Digite o preço do produto" step="0.01" required>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="estoque">Estoque:</label>
+                <input type="number" name="estoque" class="form-control" id="estoque" placeholder="Digite a quantidade em estoque" required>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="categoria_fk">Categoria:</label>
+                <select name="categoria_fk" class="form-control" id="categoria_fk" required>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id_categoria }}">{{ categoria.categoria }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-Secondary">Salvar</button>
+        </form>
+    </div>
+{% endblock %}

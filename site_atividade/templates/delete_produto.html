@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container theme-showcase" role="main">
+    <br>
+    <div class="page-header">
+        <h3 class="box-title col-md-12">Excluir Produto</h3>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <p>Tem certeza de que deseja excluir o produto "{{ produto.produto }}"?</p>
+            <br>
+            <form method="post">
+                <button type="submit" class="btn btn-Secondary">Excluir</button>
+                <a href="{{ url_for('produtos') }}" class="btn btn-danger">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

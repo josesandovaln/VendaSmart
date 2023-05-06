@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container theme-showcase" role="main">
+        <br>
+        <div class="page-header">
+            <h2 class="box-title col-md-12">Pagamento</h2>
+        </div>
+
+        <br>
+
+        <form method="post" action="{{ url_for('confirmar_pagamento') }}">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                <label for="{{ form.metodo_pagamento.id }}">Método de Pagamento:</label>
+                {{ form.metodo_pagamento(class_='form-control', placeholder='Método de Pagamento') }}
+            </div>
+
+            <br>
+
+            <div class="form-group">
+                <label for="{{ form.valor_pago.id }}">Valor do Pagamento:</label>
+                {{ form.valor_pago(class_='form-control', placeholder='Valor do Pagamento') }}
+            </div>
+
+            <input type="hidden" name="total" value="{{ total }}">
+            <input type="hidden" name="valor_pago" value="{{ valor_pago }}">
+
+            <br>
+
+            {% if erro %}
+                <div class="alert alert-danger">{{ erro }}</div>
+            {% endif %}
+
+            <br>
+
+            <button type="submit" class="btn btn-Secondary">Confirmar</button>
+        </form>
+
+        <br>
+
+        <div class="card bg-Danger">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <h4>Total da Compra: R$ {{ "{:.2f}".format(total) }}</h4>
+              </div>
+              <div class="col-md-6">
+                {% if troco %}
+                  <h4>Troco: R$ {{ troco }}</h4>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+{% endblock %}

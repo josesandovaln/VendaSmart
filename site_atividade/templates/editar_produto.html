@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="container theme-showcase" role="main">
+    <br>
+    <div class="page-header">
+        <h2 class="box-title col-md-12">Editar Produto</h2>
+    </div>
+
+    <br>
+    <form method="post" action="{{ url_for('editar_produto', id=produto.id_produtos) }}">
+        <div class="form-group">
+            <label for="produto">Produto:</label>
+            <input type="text" class="form-control" id="produto" name="produto" value="{{ produto.produto }}">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="preco">Preço:</label>
+            <input type="number" class="form-control" id="preco" name="preco" step="0.01" min="0" value="{{ produto.preco }}">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="estoque">Estoque:</label>
+            <input type="number" class="form-control" id="estoque" name="estoque" min="0" value="{{ produto.estoque }}">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="categoria">Categoria:</label>
+            <select class="form-control" id="categoria" name="categoria_fk">
+                {% for categoria in categorias %}
+                <option value="{{ categoria.id_categoria }}" {% if produto.categoria_fk == categoria.id_categoria %}selected{% endif %}>{{ categoria.categoria }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-Secondary">Salvar</button>
+        <a href="{{ url_for('produtos') }}" class="btn btn-Danger">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
+
