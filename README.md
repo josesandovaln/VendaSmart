@@ -6,28 +6,33 @@ Esta é uma aplicação construida para a disciplina de Desenvolvimento de Siste
 
 ## Layout
 
-![Login]()
+![Login](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/login.jpg)
 
-![Cadastrar usuário]()
+![Cadastrar usuário](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/cadastro_usuario.jpg)
 
-![Produto]()
+![Produto](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/produtos.jpg)
 
-![PDV]()
+![PDV](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/PDV.jpg)
 
 ## Código
 
-![BD-rotas]()
+![rotas-login](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/rota_login.png)
+
+![rotas-produto](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/rota_produto.png)
+
+![rotas-venda](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/rota_venda.png)
 
 ## Tecnologias utilizadas
 
 - Python
 - Flask (framework)
-- JavaScript
 
 # Autores
 
 José Sandoval do Carmo Neto
-Raissa Carneiro Castro
 
 https://www.linkedin.com/in/josesandovalcarmo/
+
+Raissa Carneiro Castro
+
 https://www.linkedin.com/in/raissa-carneiro/
