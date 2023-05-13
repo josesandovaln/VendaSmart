@@ -15,3 +15,4 @@ login_manager.login_message = 'Para acessar a página, realize login'
 login_manager.login_message_category = 'alert-warning'
 
 from site_atividade import routers
+
