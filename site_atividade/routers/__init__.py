@@ -51,16 +51,25 @@ def delete_produto(id):
 @login_required
 def novo_produto():
     if request.method == 'POST':
-        produto = Produtos(
-            produto=request.form['produto'],
-            preco=float(request.form['preco']),
-            estoque=int(request.form['estoque']),
-            categoria_fk=int(request.form['categoria_fk'])
-        )
-        database.session.add(produto)
-        database.session.commit()
-        flash(f'O produto {produto.produto} foi criado com sucesso!', 'alert-success')
-        return redirect(url_for('produtos'))
+        preco = float(request.form['preco'])
+        estoque = int(request.form['estoque'])
+
+        if preco <= 0 or estoque <= 0:
+            flash('O preço e o estoque devem ser maiores do que 0.', 'alert-danger')
+        else:
+            produto = Produtos(
+                produto=request.form['produto'],
+                preco=preco,
+                estoque=estoque,
+                categoria_fk=int(request.form['categoria_fk'])
+            )
+            database.session.add(produto)
+            database.session.commit()
+            flash(f'O produto {produto.produto} foi criado com sucesso!', 'alert-success')
+            return redirect(url_for('produtos'))
+
+        categorias = Categoria.query.all()
+        return render_template('novo_produto.html', categorias=categorias)
 
     categorias = Categoria.query.all()
     return render_template('novo_produto.html', categorias=categorias)
@@ -71,7 +80,13 @@ def editar_produto(id):
     produto = Produtos.query.get(id)
     if request.method == 'POST':
         produto.produto = request.form['produto']
+        if float(request.form['preco']) <= 0:
+            flash('O preço deve ser maior do que zero', 'alert-danger')
+            return redirect(url_for('editar_produto', id=id))
         produto.preco = float(request.form['preco'])
+        if int(request.form['estoque']) <= 0:
+            flash('O estoque deve ser maior do que zero', 'alert-danger')
+            return redirect(url_for('editar_produto', id=id))
         produto.estoque = int(request.form['estoque'])
         produto.categoria_fk = int(request.form['categoria_fk'])
         database.session.commit()
@@ -87,15 +102,37 @@ def cadastro_usuario():
     form_cadastro_usuario = FormCadastroUsuario()
     if form_cadastro_usuario.validate_on_submit():
         try:
-            user = Usuario(usuario=form_cadastro_usuario.usuario.data, email=form_cadastro_usuario.email.data, senha=form_cadastro_usuario.senha.data)
+            senha_crypto = bcrypt.generate_password_hash(form_cadastro_usuario.senha.data)
+            user = Usuario(usuario=form_cadastro_usuario.usuario.data, email=form_cadastro_usuario.email.data, senha=senha_crypto)
             database.session.add(user)
             database.session.commit()
             flash(f'Usuario {user.usuario} cadastrado com sucesso', 'alert-success')
         except:
             flash(f'Falha ao cadastrar usuário - Usuário já existe', 'alert-danger')
         return redirect(url_for('cadastro_usuario'))
+    if form_cadastro_usuario.senha.data != form_cadastro_usuario.confirmacao.data:
+        flash('As senhas não correspondem.', 'alert-danger')
     return render_template("cadastrar_usuario.html", form_cadastro_usuario=form_cadastro_usuario)
 
+@app.route("/usuarios")
+@login_required
+def usuarios():
+    usuarios = Usuario.query.all()
+    return render_template('lista_usuario.html', usuarios=usuarios)
+
+@app.route("/delete-usuario/<int:id>", methods=['GET', 'POST'])
+@login_required
+def delete_usuario(id):
+    usuarios = Usuario.query.get(id)
+    if request.method == 'POST':
+        if usuarios:
+            database.session.delete(usuarios)
+            database.session.commit()
+            flash(f'Usuário "{usuarios.usuario}" excluído com sucesso', 'alert-success')
+        else:
+            flash(f'Usuário não encontrado', 'alert-danger')
+        return redirect(url_for('usuarios'))
+    return render_template('delete_usuario.html', usuarios=usuarios)
 
 @app.route("/vendas", methods=['GET', 'POST'])
 @login_required
@@ -142,7 +179,7 @@ def pagamento():
 
     if form.validate_on_submit():
         metodo_pagamento = form.metodo_pagamento.data
-        valor_pago = form.valor_pago.data
+        valor_pago = form.valor_pago.data.replace('.', ',')
 
         if not valor_pago:
             return render_template('pagamento.html', erro='Valor de pagamento é obrigatório.', metodo_pagamento=metodo_pagamento, total=total)
