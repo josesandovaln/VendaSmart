@@ -14,12 +14,12 @@ class TestLoginRout(unittest.TestCase):
 
     def test_login_rout(self):
         with app.app_context():
-            user = Usuario(usuario='sandoval60', email='sandoval60@gmail.com', senha=bcrypt.generate_password_hash('123456').decode('utf-8'))
+            user = Usuario(usuario='sandoval61', email='sandoval61@gmail.com', senha=bcrypt.generate_password_hash('123456').decode('utf-8'))
             database.session.add(user)
             database.session.commit()
 
             response = self.app.post(url_for('login'), data=dict(
-                usuario='sandoval60',
+                usuario='sandoval61',
                 senha='123456'
             ), follow_redirects=True)
 

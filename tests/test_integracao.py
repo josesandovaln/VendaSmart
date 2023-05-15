@@ -1,9 +1,11 @@
 import unittest
 from site_atividade import app, database
 from tests.test_cadastro_usuario import TestCadastroUsuarioRout
+from tests.test_delete_usuario import TesteDeleteUsuario
 from tests.test_login import TestLoginRout
 from tests.test_pagamento import TestPagamentoRout
 from tests.test_produtos import TestProdutosRout
+from tests.test_usuario import TestUsuarioRout
 from tests.test_venda import TestVendasRout
 
 
@@ -38,6 +40,13 @@ class TestIntegracao(unittest.TestCase):
         test_venda.setUp()
         test_venda.test_venda_route()
 
+        test_usuario = TestUsuarioRout()
+        test_usuario.setUp()
+        test_usuario.test_usuario_rout()
+
+        test_delete_usuario = TesteDeleteUsuario()
+        test_delete_usuario.setUp()
+        test_delete_usuario.test_excluir_usuario()
 
 if __name__ == '__main__':
     unittest.main()
