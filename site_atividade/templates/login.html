@@ -1,10 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'base_sem_navbar.html' %}
 
 {% block body %}
         <br>
+        <br>
+        <br>
+<br>
         <div class="container col-md-4 cl-md-offset-3 mt-2 loglog">
-            <form method="POST" class="border p-3">
+            <form method="POST" class="border border-dark p-3 rounded">
                 {{ form_login.csrf_token }}
+                <div>
+                    <img src="static/image/logo-body7.png" class="imagem-centralizada" alt="Descrição da imagem">
+                </div>
+                <br>
                 <div style="text-align: center;">
                     <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
                 </div>
@@ -13,25 +20,27 @@
                         {{ form_login.usuario.label(class="form-label") }}
                         {{ form_login.usuario(class="form-control") }}
                     </div>
-    
+
                     <div class="form-outline mb-4">
                         {{ form_login.senha.label(class="form-label") }}
                         {{ form_login.senha(class="form-control") }}
                     </div>
                 </fieldset>
-                
+
 
                 <div class="row mb-4">
-                    <div class="col-sm">
+                    <div class="col-sm container-buttons">
+                        <div class="col-sm button-entrar" style="text-align: right;">
+                            {{ form_login.submit_entrar(class="btn btn-Secondary btn-block mb-4 text-dark text-entrar") }}
+                        </div>
                         <div class="form-check">
                             {{ form_login.lembrar(class="form-check-input", value="") }}
                             {{ form_login.lembrar.label(class="form-check-label") }}
                         </div>
+                        <div
+                            <a href="#">Esqueceu sua Senha?</a>
+                        </div>
                     </div>
-                    <div class="col-sm" style="text-align: right;">
-                        {{ form_login.submit_entrar(class="btn btn-Secondary btn-block mb-4") }}
-                    </div>
-
                 </div>
             </form>
         </div>
