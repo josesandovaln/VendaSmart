@@ -1,0 +1,39 @@
+body{
+    background-color: #D5F5D3;
+}
+
+.button-entrar > input{
+    background-color: #6DB766;
+    transition: 0.5s
+}
+
+.button-entrar > input:hover{
+    background-color: #667565
+}
+
+.container-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-entrar > input {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.imagem-centralizada {
+  display: block;
+  margin: 0 auto;
+  max-width: 50%;
+}
+
+.text-entrar {
+    font-weight: bold;
+}
+
+.bb-border {
+    border-color: #6DB766;
+}
+

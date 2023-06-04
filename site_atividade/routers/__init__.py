@@ -30,8 +30,26 @@ def logout():
 @app.route("/produtos")
 @login_required
 def produtos():
-    produtos = Produtos.query.all()
-    return render_template('lista_produto.html', produtos=produtos)
+    search_term = request.args.get('search')
+
+    if search_term:
+        produtos = Produtos.query.filter(Produtos.produto.ilike(f'%{search_term}%')).all()
+    else:
+        produtos = Produtos.query.all()
+
+    categorias = Categoria.query.all()  # Obter todas as categorias
+
+    return render_template('lista_produto.html', produtos=produtos, categorias=categorias)
+
+@app.route('/nova-categoria', methods=['POST'])
+@login_required
+def nova_categoria():
+    categoria = request.form.get('categoria')
+    nova_categoria = Categoria(categoria=categoria)
+    database.session.add(nova_categoria)
+    database.session.commit()
+    flash('Nova categoria adicionada com sucesso!')
+    return redirect(url_for('produtos'))
 
 @app.route("/delete-produto/<int:id>", methods=['GET', 'POST'])
 @login_required

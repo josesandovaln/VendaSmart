@@ -1,38 +1,35 @@
-body{
-    background-color: #D5F5D3;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+body {
+    padding-top: 100px;
+    font-family: 'Poppins', sans-serif;
 }
 
-.button-entrar > input{
+.btn-color1 {
     background-color: #6DB766;
-    transition: 0.5s
+    transition: .5s;
 }
 
-.button-entrar > input:hover{
-    background-color: #667565
+.btn-color1:hover {
+    background-color: #90a68f;
 }
 
-.container-buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.btn-color2 {
+    background-color: #DC236D;
+    transition: .5s;
 }
 
-.button-entrar > input {
-    text-align: center;
-    margin-top: 10px;
+.btn-color2:hover {
+    background-color: #A81B53;
 }
 
-.imagem-centralizada {
-  display: block;
-  margin: 0 auto;
-  max-width: 50%;
+.btn-color3 {
+    background-color: #292928;
+    transition: .5s;
+    color: #fff;
 }
 
-.text-entrar {
-    font-weight: bold;
-}
-
-.bb-border {
-    border-color: #6DB766;
+.btn-color3:hover {
+    background-color: #fff;
+    border: 1px solid #6DB766;
 }

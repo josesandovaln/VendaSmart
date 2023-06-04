@@ -1,47 +1,48 @@
-<nav class="navbar navbar-expand-lg navbar-Warning bg-Warning static-top">
+<nav class="navbar navbar-expand-lg fixed-top navbar-light">
   <div class="container">
-      <a class="navbar-brand" href="#">
-        <img src="{{ url_for('static', filename='image/logo2.svg') }}" alt="logo" height="50">
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav ms-auto">
-          {% if current_user.is_authenticated %}
-          <li class="nav-item h4">
-              <a class="nav-link " aria-current="page" href="{{ url_for('vendas') }}">
-                  PDV
-              </a>
+    <a class="navbar-brand" href="#"
+      ><img
+        id="MDB-logo"
+        src="static/image/logo-body7.png"
+        alt="vendasSmart"
+        draggable="false"
+        height="70"
+    /></a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-mdb-toggle="collapse"
+      data-mdb-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse nav-transition" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto align-items-center">
+        {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link mx-2" href="{{ url_for('vendas') }}"><i class="fa-solid fa-cash-register style="color: #000000;"></i>Vendas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link mx-2" href="{{ url_for('usuarios') }}"><i class="fa-solid fa-users" style="color: #000000;"></i>Usuário</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link mx-2" href="{{ url_for('produtos') }}"><i class="fa-solid fa-store" style="color: #000000;"></i>Produtos</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link mx-2" href="{{ url_for('cadastro_usuario') }}"><i class="fa-solid fa-user" style="color: #000000;"></i>Cadastro Usuário</a>
+        </li>
+        <li class="nav-item ms-3">
+            <a class="btn btn-black btn-rounded" href="{{ url_for('logout') }}">Sair</a>
           </li>
-          <li class="nav-item h4">
-              <a class="nav-link" aria-current="page" href="{{ url_for('usuarios') }}">
-                  Usuário
-              </a>
-          </li>
-          <li class="nav-item h4">
-              <a class="nav-link " aria-current="page" href="{{ url_for('produtos') }}">
-                  Produto
-              </a>
-          </li>
-          <li class="nav-item h4">
-              <a class="nav-link" aria-current="page" href="{{ url_for('cadastro_usuario') }}">
-                  Cadastro Usuário
-              </a>
-          </li>
-          <li class="nav-item h4">
-              <a class="nav-link" aria-current="page" href="{{ url_for('logout') }}">
-                  Logout
-              </a>
-          </li>
-          {% else %}
-          <li class="nav-item h4">
-              <a class="nav-link active" aria-current="page" href="{{ url_for('login') }}">
-                  Login
-              </a>
-          </li>
-          {% endif %}
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link mx-2" href="{{ url_for('login') }}"><i class="fas fa-heart pe-2"></i>Login</a>
+        </li>
+        {% endif %}
       </ul>
-      </div>
+    </div>
   </div>
 </nav>

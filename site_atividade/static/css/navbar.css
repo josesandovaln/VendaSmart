@@ -1,0 +1,15 @@
+.navbar-light .navbar-nav .nav-link {
+    color: #000;
+}
+
+.navbar {
+    background-color: #D5F5D3;
+}
+
+.collapse > ul > li > a {
+    font-size: 1.3em;
+}
+
+i {
+    padding: 10px;
+}
