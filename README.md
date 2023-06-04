@@ -26,6 +26,7 @@ Esta é uma aplicação construida para a disciplina de Desenvolvimento de Siste
 
 - Python
 - Flask (framework)
+- JavaScript
 
 # Autores
 
