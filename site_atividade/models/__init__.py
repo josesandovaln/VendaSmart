@@ -41,8 +41,6 @@ class Produtos(database.Model):
     def __repr__(self):
         return f'Produto({self.produto}, {self.marca}, {self.preco_aquisicao}, {self.preco}, {self.estoque}, {self.margem_lucro})'
 
-
-
 class Categoria(database.Model):
     id_categoria = database.Column(database.Integer, primary_key=True)
     categoria = database.Column(database.String, nullable=False)
