@@ -10,11 +10,14 @@
             <br>
 
             <div class="search-box">
-                <form action="{{ url_for('produtos') }}" method="GET">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Pesquisar" id="search-input" name="search">
+                <form class="form-search" action="{{ url_for('produtos') }}" method="GET">
+                    <div class="input-group form-group-search">
+                        <input type="text" class="form-control form-control-search" placeholder="Digite aqui o que você deseja pesquisar..." id="search-input" name="search">
                         <span class="input-group-btn">
-                            <button class="btn btn-color3" type="submit">Buscar</button>
+                            <button class="btn-search type="submit"><svg class="bi bi-search" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+                                <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                              </svg></button>
                         </span>
                     </div>
                 </form>
@@ -24,14 +27,14 @@
                 <table class="table table-hover scrollable-table">
                     <thead>
                         <tr>
-                            <th>Id</th>
-                            <th>Produto</th>
-                            <th>Marca</th>
-                            <th>Categoria</th>
-                            <th>Preço Aquisição</th>
-                            <th>Preço Final</th>
-                            <th>Margem de Lucro</th>
-                            <th>Estoque</th>
+                            <th class="text-center">Id</th>
+                            <th class="text-center">Produto</th>
+                            <th class="text-center">Marca</th>
+                            <th class="text-center">Categoria</th>
+                            <th class="text-center">Preço Aquisição</th>
+                            <th class="text-center">Preço Final</th>
+                            <th class="text-center">Margem de Lucro</th>
+                            <th class="text-center">Estoque</th>
                             <th> </th>
                         </tr>
                     </thead>
@@ -39,12 +42,15 @@
 
                     {% for produto in produtos %}
                         <tr data-href="#">
-                           </td> <td> {{ produto.id_produtos }} </td>
-                            <td>{{ produto.produto }}</td>
-                            <td>{{ produto.categoria.categoria }}</td>
-                            <td>{{ produto.preco }}</td>
-                            <td>{{ produto.estoque }}</td>
-                            <td>
+                           </td> <td class="text-center"> {{ produto.id_produtos }} </td>
+                            <td class="text-center">{{ produto.produto }}</td>
+                            <td class="text-center">{{ produto.marca }}</td>
+                            <td class="text-center">{{ produto.categoria.categoria }}</td>
+                            <td class="text-center">{{ "{:.2f}".format(produto.preco_aquisicao).replace('.', ',') }}</td>
+                            <td class="text-center">{{ "{:.2f}".format(produto.preco).replace('.', ',') }}</td>
+                            <td class="text-center">{{ "{:.2f}%".format(produto.margem_lucro) }}</td>
+                            <td class="text-center">{{ produto.estoque }}</td>
+                            <td class="btn-edit-delete text-right">
                                 <a class="btn btn-color1 text-white" data-toggle="modal" data-target="#editProdutoModal{{ produto.id_produtos }}">Editar</a>
                                 <a class="btn btn-color2 text-white" data-toggle="modal" data-target="#deleteProdutoModal{{ produto.id_produtos }}">Excluir</a>
                             </td>
@@ -81,8 +87,8 @@
                                     <input type="text" class="form-control" id="categoria" name="categoria" required>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-primary">Salvar</button>
+                                    <button type="button" class="btn btn-color2 text-white" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-color1 text-white">Salvar</button>
                                 </div>
                             </form>
                         </div>
@@ -106,6 +112,10 @@
                                     <input name="produto" type="text" class="form-control" required>
                                 </div>
                                 <div class="form-group">
+                                    <label for="marca">Marca:</label>
+                                    <input name="marca" type="text" class="form-control" required>
+                                </div>
+                                <div class="form-group">
                                     <label for="categoria_fk" class="control-label" id="categoria_fk">Categoria:</label>
                                     <select name="categoria_fk" class="form-control">
                                         {% for categoria in categorias %}
@@ -114,7 +124,11 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="preco">Preço (R$):</label>
+                                    <label for="precoAquisicao">Preço de Aquisição (R$):</label>
+                                    <input name="preco_aquisicao" type="number" class="form-control" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="preco">Preço Final (R$):</label>
                                     <input name="preco" type="number" class="form-control" step="0.01" required>
                                 </div>
                                 <div class="form-group">
@@ -122,8 +136,8 @@
                                     <input name="estoque" type="number" class="form-control" required>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                                    <button type="submit" class="btn btn-primary">Salvar</button>
+                                    <button type="button" class="btn btn-color2 text-white" data-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-color1 text-white">Salvar</button>
                                 </div>
                             </form>
                         </div>
@@ -147,9 +161,9 @@
                         </div>
                         <div class="modal-footer">
                             <form method="post" action="{{ url_for('delete_produto', id=produto.id_produtos) }}">
-                                <button type="submit" class="btn btn-danger">Excluir</button>
+                                <button type="submit" class="btn btn-color2 text-white">Excluir</button>
                             </form>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-color3" data-dismiss="modal">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -186,8 +200,8 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-Secondary">Salvar</button>
-                                <a href="{{ url_for('produtos') }}" class="btn btn-Danger">Cancelar</a>
+                                <button type="submit" class="btn btn-color1 text-white">Salvar</button>
+                                <a href="{{ url_for('produtos') }}" class="btn btn-color2 text-white">Cancelar</a>
                             </form>
                         </div>
                     </div>

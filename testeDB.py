@@ -10,11 +10,11 @@ from site_atividade.models import Usuario, Produtos, Categoria
 #    database.create_all()
 
 '''Inserir um registro em uma tabela usando o model da tabela'''
-#with app.app_context():
-#    senha_crypto = bcrypt.generate_password_hash('123456')
-#    usuario = Usuario(usuario='admin', email='admin@gmail.com', senha=senha_crypto)
-#   database.session.add(usuario)
-#    database.session.commit()
+with app.app_context():
+    senha_crypto = bcrypt.generate_password_hash('123456')
+    usuario = Usuario(usuario='admin', email='admin@gmail.com', senha=senha_crypto)
+    database.session.add(usuario)
+    database.session.commit()
 
 '''Inserir um registro em uma tabela usando o model da tabela'''
 #with app.app_context():

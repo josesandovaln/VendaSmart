@@ -15,10 +15,32 @@ class Usuario(database.Model, UserMixin):
 class Produtos(database.Model):
     id_produtos = database.Column(database.Integer, primary_key=True)
     produto = database.Column(database.String, nullable=False)
+    marca = database.Column(database.String, nullable=False)
+    preco_aquisicao = database.Column(database.Float, nullable=False)
     preco = database.Column(database.Float, nullable=False)
     estoque = database.Column(database.Integer, nullable=False)
+    margem_lucro = database.Column(database.Float, nullable=True)
     categoria_fk = database.Column(database.Integer, database.ForeignKey('categoria.id_categoria'), nullable=False)
     venda = database.relationship('Venda', backref='produto')
+
+    def calcular_margem_lucro(self):
+        if self.preco != 0:
+            self.margem_lucro = ((self.preco - self.preco_aquisicao) / self.preco) * 100
+        else:
+            self.margem_lucro = 0
+
+    def __init__(self, produto, marca, preco_aquisicao, preco, estoque, categoria_fk):
+        self.produto = produto
+        self.marca = marca
+        self.preco_aquisicao = preco_aquisicao
+        self.preco = preco
+        self.estoque = estoque
+        self.categoria_fk = categoria_fk
+        self.calcular_margem_lucro()
+
+    def __repr__(self):
+        return f'Produto({self.produto}, {self.marca}, {self.preco_aquisicao}, {self.preco}, {self.estoque}, {self.margem_lucro})'
+
 
 
 class Categoria(database.Model):

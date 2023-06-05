@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, url_for, redirect, flash, request
+from flask import render_template, url_for, redirect, flash, request, get_template_attribute
 from site_atividade.forms import FormLogin, FormCadastroUsuario, FormListarUsuario, VendasForm, PagamentoForm
 from site_atividade import app, database, bcrypt
 from site_atividade.models import Usuario, Produtos, Categoria, Venda, Pagamento
@@ -70,6 +70,7 @@ def delete_produto(id):
 def novo_produto():
     if request.method == 'POST':
         preco = float(request.form['preco'])
+        preco_aquisicao = float(request.form['preco_aquisicao'])
         estoque = int(request.form['estoque'])
 
         if preco <= 0 or estoque <= 0:
@@ -77,17 +78,17 @@ def novo_produto():
         else:
             produto = Produtos(
                 produto=request.form['produto'],
+                marca=request.form['marca'],
+                preco_aquisicao=preco_aquisicao,
                 preco=preco,
                 estoque=estoque,
                 categoria_fk=int(request.form['categoria_fk'])
             )
+            produto.calcular_margem_lucro()
             database.session.add(produto)
             database.session.commit()
             flash(f'O produto {produto.produto} foi criado com sucesso!', 'alert-success')
             return redirect(url_for('produtos'))
-
-        categorias = Categoria.query.all()
-        return render_template('novo_produto.html', categorias=categorias)
 
     categorias = Categoria.query.all()
     return render_template('novo_produto.html', categorias=categorias)
@@ -118,25 +119,35 @@ def editar_produto(id):
 @login_required
 def cadastro_usuario():
     form_cadastro_usuario = FormCadastroUsuario()
+
     if form_cadastro_usuario.validate_on_submit():
         try:
             senha_crypto = bcrypt.generate_password_hash(form_cadastro_usuario.senha.data)
-            user = Usuario(usuario=form_cadastro_usuario.usuario.data, email=form_cadastro_usuario.email.data, senha=senha_crypto)
+            user = Usuario(usuario=form_cadastro_usuario.usuario.data, email=form_cadastro_usuario.email.data,
+                           senha=senha_crypto)
             database.session.add(user)
             database.session.commit()
-            flash(f'Usuario {user.usuario} cadastrado com sucesso', 'alert-success')
+            flash(f'Usuário {user.usuario} cadastrado com sucesso', 'alert-success')
+
+            # Atualizar a lista de usuários
+            usuarios = Usuario.query.all()
+            return render_template('lista_usuario.html', usuarios=usuarios, form_cadastro_usuario=form_cadastro_usuario)
         except:
             flash(f'Falha ao cadastrar usuário - Usuário já existe', 'alert-danger')
-        return redirect(url_for('cadastro_usuario'))
+
     if form_cadastro_usuario.senha.data != form_cadastro_usuario.confirmacao.data:
         flash('As senhas não correspondem.', 'alert-danger')
+
     return render_template("cadastrar_usuario.html", form_cadastro_usuario=form_cadastro_usuario)
+
+
 
 @app.route("/usuarios")
 @login_required
 def usuarios():
     usuarios = Usuario.query.all()
-    return render_template('lista_usuario.html', usuarios=usuarios)
+    form_cadastro_usuario = FormCadastroUsuario()
+    return render_template('lista_usuario.html', usuarios=usuarios, form_cadastro_usuario=form_cadastro_usuario)
 
 @app.route("/delete-usuario/<int:id>", methods=['GET', 'POST'])
 @login_required

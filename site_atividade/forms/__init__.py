@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, FloatField, SelectField
-from wtforms.validators import DataRequired, length, email, equal_to
+from wtforms.validators import DataRequired, length, email, equal_to, Length
+
 
 class FormLogin(FlaskForm):
     usuario = StringField('Usuário:', validators=[DataRequired(), length(5)])
@@ -9,7 +10,7 @@ class FormLogin(FlaskForm):
     submit_entrar = SubmitField('Entrar')
 
 class FormCadastroUsuario(FlaskForm):
-    usuario = StringField('Usuário:', validators=[DataRequired(), length(5)])
+    usuario = StringField('Usuário:', validators=[DataRequired(), Length(min=5)])
     email = StringField('E-mail:', validators=[DataRequired(), email()])
     senha = PasswordField('Senha:',  validators=[DataRequired(), length(6, 16)])
     confirmacao = PasswordField('Confirmação da senha:',  validators=[DataRequired(), equal_to('senha')])
