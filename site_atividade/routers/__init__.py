@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import render_template, url_for, redirect, flash, request, get_template_attribute
-from site_atividade.forms import FormLogin, FormCadastroUsuario, FormListarUsuario, VendasForm, PagamentoForm
+from site_atividade.forms import FormLogin, FormCadastroUsuario, FormListarUsuario, VendasForm, PagamentoForm, \
+    FormEditarUsuario
 from site_atividade import app, database, bcrypt
 from site_atividade.models import Usuario, Produtos, Categoria, Venda, Pagamento
 from flask_login import login_user, logout_user, login_required
@@ -146,12 +147,13 @@ def cadastro_usuario():
 @login_required
 def usuarios():
     form_cadastro_usuario = FormCadastroUsuario()
+    form_editar_usuario = FormEditarUsuario()
     search_query = request.args.get('search')
     if search_query:
         usuarios = Usuario.query.filter(Usuario.usuario.ilike(f"%{search_query}%")).all()
     else:
         usuarios = Usuario.query.all()
-    return render_template('lista_usuario.html', usuarios=usuarios, form_cadastro_usuario=form_cadastro_usuario, search_query=search_query)
+    return render_template('lista_usuario.html', usuarios=usuarios, form_cadastro_usuario=form_cadastro_usuario, form_editar_usuario=form_editar_usuario, search_query=search_query)
 
 
 @app.route("/delete-usuario/<int:id>", methods=['GET', 'POST'])
@@ -167,6 +169,24 @@ def delete_usuario(id):
             flash(f'Usuário não encontrado', 'alert-danger')
         return redirect(url_for('usuarios'))
     return render_template('delete_usuario.html', usuarios=usuarios)
+
+
+@app.route("/editar-usuario/<int:id>", methods=['GET', 'POST'])
+@login_required
+def editar_usuario(id):
+    usuario = Usuario.query.get(id)
+    form_editar_usuario = FormEditarUsuario(obj=usuario)
+
+    if request.method == 'POST':
+        if form_editar_usuario.validate_on_submit():
+            usuario.usuario = form_editar_usuario.usuario.data
+            usuario.email = form_editar_usuario.email.data
+            database.session.commit()
+            flash(f'Usuário "{usuario.usuario}" atualizado com sucesso', 'alert-success')
+            return redirect(url_for('usuarios'))
+
+    return render_template('editar_usuario.html', form_editar_usuario=form_editar_usuario, usuario=usuario)
+
 
 @app.route("/vendas", methods=['GET', 'POST'])
 @login_required

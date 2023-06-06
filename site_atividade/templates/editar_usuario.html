@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container theme-showcase" role="main">
+    <div class="page-header">
+        <br>
+        <h3 class="box-title col-md-12">Editar Usuário</h3>
+    </div>
+
+    <br>
+
+    <form action="{{ url_for('editar_usuario', id=usuario.id) }}" method="POST">
+        {{ form_editar_usuario.csrf_token }}
+        <div class="form-group">
+            {{ form_editar_usuario.usuario.label(class="form-label") }}
+            {{ form_editar_usuario.usuario(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form_editar_usuario.email.label(class="form-label") }}
+            {{ form_editar_usuario.email(class="form-control") }}
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Atualizar</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

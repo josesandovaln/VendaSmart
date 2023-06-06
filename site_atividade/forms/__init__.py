@@ -16,6 +16,10 @@ class FormCadastroUsuario(FlaskForm):
     confirmacao = PasswordField('Confirmação da senha:',  validators=[DataRequired(), equal_to('senha')])
     submit_cadastro_usuario = SubmitField('Criar')
 
+class FormEditarUsuario(FlaskForm):
+    usuario = StringField('Usuário:', validators=[DataRequired(), Length(min=5)])
+    email = StringField('E-mail:', validators=[DataRequired(), email()])
+
 class FormListarUsuario(FlaskForm):
     usuarios = None
     submit_excluir_usuario = SubmitField('Excluir')
