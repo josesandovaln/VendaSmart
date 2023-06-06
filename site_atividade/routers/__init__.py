@@ -145,12 +145,12 @@ def cadastro_usuario():
 @app.route("/usuarios")
 @login_required
 def usuarios():
+    form_cadastro_usuario = FormCadastroUsuario()
     search_query = request.args.get('search')
     if search_query:
         usuarios = Usuario.query.filter(Usuario.usuario.ilike(f"%{search_query}%")).all()
     else:
         usuarios = Usuario.query.all()
-    form_cadastro_usuario = FormCadastroUsuario()
     return render_template('lista_usuario.html', usuarios=usuarios, form_cadastro_usuario=form_cadastro_usuario, search_query=search_query)
 
 

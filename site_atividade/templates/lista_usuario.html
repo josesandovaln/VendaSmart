@@ -42,7 +42,7 @@
                         <td>{{ usuario.email }}</td>
                         <td>
                             <a class="btn btn-color1 text-white" href="#">Editar</a>
-                            <a class="btn btn-color2 text-white excluir-usuario-btn" data-toggle="modal" data-target="#excluirUsuarioModal{{ usuarios.id }}">Excluir</a>
+                            <a class="btn btn-color2 text-white excluir-usuario-btn" data-toggle="modal" data-target="#excluirUsuarioModal{{ usuario.id }}">Excluir</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -94,7 +94,8 @@
                 </div>
             </div>
             
-            <div class="modal fade" id="excluirUsuarioModal" tabindex="-1" role="dialog" aria-labelledby="excluirUsuarioModalLabel" aria-hidden="true">
+            {% for usuario in usuarios %}
+            <div class="modal fade" id="excluirUsuarioModal{{ usuario.id }}" tabindex="-1" role="dialog" aria-labelledby="excluirUsuarioModalLabel{{ usuario.id }}" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -104,16 +105,19 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>Tem certeza de que deseja excluir o usuário {{ usuarios.usuario }}?</p>
+                            <p>Tem certeza de que deseja excluir o usuário {{ usuario.usuario }}?</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-Secondary">Excluir</button>
+                            <form action="{{ url_for('delete_usuario', id=usuario.id) }}" method="POST">
+                                {{ form_cadastro_usuario.csrf_token }}
+                                <button type="submit" class="btn btn-Secondary">Excluir</button>
+                            </form>
                             <a href="{{ url_for('usuarios') }}" class="btn btn-danger">Cancelar</a>
                         </div>
                     </div>
                 </div>
             </div>
-
+            {% endfor %}
             
         </div>
 {% endblock %}
