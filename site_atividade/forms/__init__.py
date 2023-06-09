@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, FloatField, SelectField
-from wtforms.validators import DataRequired, length, email, equal_to, Length
+from wtforms.validators import DataRequired, length, email, equal_to, Length, EqualTo
 
 
 class FormLogin(FlaskForm):
@@ -19,6 +19,12 @@ class FormCadastroUsuario(FlaskForm):
 class FormEditarUsuario(FlaskForm):
     usuario = StringField('Usuário:', validators=[DataRequired(), Length(min=5)])
     email = StringField('E-mail:', validators=[DataRequired(), email()])
+
+class FormAtualizarSenha(FlaskForm):
+    senha_atual = PasswordField('Senha Atual', validators=[DataRequired()])
+    nova_senha = PasswordField('Nova Senha', validators=[DataRequired()])
+    confirmar_senha = PasswordField('Confirmar Nova Senha', validators=[DataRequired(), EqualTo('nova_senha', message='As senhas não coincidem')])
+    submit = SubmitField('Atualizar Senha')
 
 class FormListarUsuario(FlaskForm):
     usuarios = None

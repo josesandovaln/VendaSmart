@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask import render_template, url_for, redirect, flash, request, get_template_attribute
 from site_atividade.forms import FormLogin, FormCadastroUsuario, FormListarUsuario, VendasForm, PagamentoForm, \
-    FormEditarUsuario
+    FormEditarUsuario, FormAtualizarSenha
 from site_atividade import app, database, bcrypt
 from site_atividade.models import Usuario, Produtos, Categoria, Venda, Pagamento
 from flask_login import login_user, logout_user, login_required
@@ -148,12 +148,13 @@ def cadastro_usuario():
 def usuarios():
     form_cadastro_usuario = FormCadastroUsuario()
     form_editar_usuario = FormEditarUsuario()
+    form = FormAtualizarSenha()
     search_query = request.args.get('search')
     if search_query:
         usuarios = Usuario.query.filter(Usuario.usuario.ilike(f"%{search_query}%")).all()
     else:
         usuarios = Usuario.query.all()
-    return render_template('lista_usuario.html', usuarios=usuarios, form_cadastro_usuario=form_cadastro_usuario, form_editar_usuario=form_editar_usuario, search_query=search_query)
+    return render_template('lista_usuario.html', usuarios=usuarios, form_cadastro_usuario=form_cadastro_usuario, form_editar_usuario=form_editar_usuario, search_query=search_query, form=form)
 
 
 @app.route("/delete-usuario/<int:id>", methods=['GET', 'POST'])
@@ -186,6 +187,32 @@ def editar_usuario(id):
             return redirect(url_for('usuarios'))
 
     return render_template('editar_usuario.html', form_editar_usuario=form_editar_usuario, usuario=usuario)
+
+@app.route("/atualizar_senha/<int:id>", methods=['GET', 'POST'])
+@login_required
+def atualizar_senha(id):
+    usuario = Usuario.query.get_or_404(id)
+    form = FormAtualizarSenha()
+
+    if form.validate_on_submit():
+        senha_atual = form.senha_atual.data
+        nova_senha = form.nova_senha.data
+        confirmar_senha = form.confirmar_senha.data
+
+        if not usuario.verificar_senha(senha_atual):
+            flash('Senha atual incorreta.', 'danger')
+        elif nova_senha != confirmar_senha:
+            flash('A nova senha e a confirmação da senha não coincidem.', 'danger')
+        else:
+            usuario.set_senha(nova_senha)
+            database.session.commit()
+            flash('Senha atualizada com sucesso.', 'success')
+            return redirect(url_for('usuarios'))
+
+    return render_template('atualizar_senha.html', form=form, usuario=usuario)
+
+
+
 
 
 @app.route("/vendas", methods=['GET', 'POST'])

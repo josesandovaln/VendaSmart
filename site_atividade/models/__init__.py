@@ -1,5 +1,5 @@
 from datetime import datetime
-from site_atividade import database, login_manager
+from site_atividade import database, login_manager, bcrypt
 from flask_login import UserMixin
 
 @login_manager.user_loader
@@ -11,6 +11,14 @@ class Usuario(database.Model, UserMixin):
     usuario = database.Column(database.String, nullable=False, unique=True)
     email = database.Column(database.String, nullable=False, unique=True)
     senha = database.Column(database.String, nullable=False)
+
+    def verificar_senha(self, senha):
+        if bcrypt.check_password_hash(self.senha, senha):
+            return True
+        return False
+
+    def set_senha(self, nova_senha):
+        self.senha = bcrypt.generate_password_hash(nova_senha).decode('utf-8')
 
 class Produtos(database.Model):
     id_produtos = database.Column(database.Integer, primary_key=True)
