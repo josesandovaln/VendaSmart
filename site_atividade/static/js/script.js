@@ -57,3 +57,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+$(document).ready(function() {
+  // Botão de adicionar quantidade
+  $(".btn-add-quantity").click(function() {
+      var produtoId = $(this).data("produto-id");
+      // Realize a lógica para adicionar a quantidade desejada ao produto com o ID 'produtoId'
+      // ...
+  });
+
+  // Botão de remover quantidade
+  $(".btn-remove-quantity").click(function() {
+      var produtoId = $(this).data("produto-id");
+      // Realize a lógica para remover a quantidade desejada do produto com o ID 'produtoId'
+      // ...
+  });
+
+  // Botão de adicionar à venda
+  $(".btn-add-venda").click(function() {
+      var produtoId = $(this).data("produto-id");
+      // Realize a lógica para adicionar o produto com o ID 'produtoId' à tabela de vendas
+      // ...
+  });
+});

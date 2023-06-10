@@ -185,7 +185,15 @@
                                     <input type="text" class="form-control" id="produto" name="produto" value="{{ produto.produto }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="preco">Preço:</label>
+                                    <label for="preco">Marca:</label>
+                                    <input type="text" class="form-control" id="marca" name="marca" value="{{ produto.marca }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="preco">Preço Aquisição:</label>
+                                    <input type="number" class="form-control" id="preco-aquisicao" name="preco_aquisicao" step="0.01" min="0" value="{{ produto.preco_aquisicao }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="preco">Preço Final:</label>
                                     <input type="number" class="form-control" id="preco" name="preco" step="0.01" min="0" value="{{ produto.preco }}">
                                 </div>
                                 <div class="form-group">

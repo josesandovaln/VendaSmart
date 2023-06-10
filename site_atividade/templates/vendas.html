@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block body %}
+
     <div class="container theme-showcase" role="main">
         <br>
         <div class="page-header">
@@ -9,27 +10,52 @@
 
         <br>
 
+        <div class="search-box">
+            <form class="form-search" action="{{ url_for('vendas') }}" method="GET">
+                <div class="input-group form-group-search">
+                    <input type="text" class="form-control form-control-search" placeholder="Digite aqui o que você deseja pesquisar..." id="search-input" name="search">
+                    <span class="input-group-btn">
+                        <button class="btn-search" type="submit">
+                            <svg class="bi bi-search" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+                                <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                            </svg>
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
 
-        <form method="post" action="{{ url_for('vendas') }}">
-            {{ form.hidden_tag() }}
-
-            <div class="form-group">
-                <label for="{{ form.produto_id.id }}">Código do Produto:</label>
-                {{ form.produto_id(class_='form-control', placeholder='Código do Produto') }}
-            </div>
-
-            <br>
-
-            <div class="form-group">
-                <label for="{{ form.quantidade.id }}">Quantidade:</label>
-                {{ form.quantidade(class_='form-control', placeholder='Quantidade') }}
-            </div>
-
-            <br>
-
-            <button type="submit" class="btn btn-Secondary">Confirmar</button>
-        </form>
-
+        <div class="list-product">
+            <table class="table table-hover scrollable-table">
+                <thead>
+                    <tr>
+                        <th class="text-center">Id</th>
+                        <th class="text-center">Produto</th>
+                        <th class="text-center">Marca</th>
+                        <th class="text-center">Preço Final</th>
+                        <th class="text-center">Estoque</th>
+                        <th class="text-center">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produto in produtos %}
+                    <tr>
+                        <td class="text-center">{{ produto.id_produtos }}</td>
+                        <td class="text-center">{{ produto.produto }}</td>
+                        <td class="text-center">{{ produto.marca }}</td>
+                        <td class="text-center">{{ "{:.2f}".format(produto.preco).replace('.', ',') }}</td>
+                        <td class="text-center">{{ produto.estoque }}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-primary btn-add-quantity" data-produto-id="{{ produto.id_produtos }}">+</button>
+                            <button class="btn btn-sm btn-danger btn-remove-quantity" data-produto-id="{{ produto.id_produtos }}">-</button>
+                            <button class="btn btn-sm btn-success btn-add-venda" data-produto-id="{{ produto.id_produtos }}">Adicionar à venda</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
 
         <br>

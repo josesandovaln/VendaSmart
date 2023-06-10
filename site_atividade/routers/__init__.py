@@ -100,6 +100,11 @@ def editar_produto(id):
     produto = Produtos.query.get(id)
     if request.method == 'POST':
         produto.produto = request.form['produto']
+        produto.marca = request.form['marca']
+        if float(request.form['preco_aquisicao']) <= 0:
+            flash('O preço de aquisição deve ser maior do que zero', 'alert-danger')
+            return redirect(url_for('editar_produto', id=id))
+        produto.preco_aquisicao = float(request.form['preco_aquisicao'])
         if float(request.form['preco']) <= 0:
             flash('O preço deve ser maior do que zero', 'alert-danger')
             return redirect(url_for('editar_produto', id=id))
@@ -129,19 +134,14 @@ def cadastro_usuario():
             database.session.add(user)
             database.session.commit()
             flash(f'Usuário {user.usuario} cadastrado com sucesso', 'alert-success')
-
-            # Atualizar a lista de usuários
-            usuarios = Usuario.query.all()
-            return render_template('lista_usuario.html', usuarios=usuarios, form_cadastro_usuario=form_cadastro_usuario)
+            return redirect(url_for('usuarios'))
         except:
             flash(f'Falha ao cadastrar usuário - Usuário já existe', 'alert-danger')
 
     if form_cadastro_usuario.senha.data != form_cadastro_usuario.confirmacao.data:
         flash('As senhas não correspondem.', 'alert-danger')
 
-    return render_template("cadastrar_usuario.html", form_cadastro_usuario=form_cadastro_usuario)
-
-
+    return redirect(url_for('usuarios'))
 
 @app.route("/usuarios")
 @login_required
@@ -209,11 +209,7 @@ def atualizar_senha(id):
             flash('Senha atualizada com sucesso.', 'success')
             return redirect(url_for('usuarios'))
 
-    return render_template('atualizar_senha.html', form=form, usuario=usuario)
-
-
-
-
+    return redirect(url_for('usuarios'))
 
 @app.route("/vendas", methods=['GET', 'POST'])
 @login_required
