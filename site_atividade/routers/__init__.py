@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, url_for, redirect, flash, request, get_template_attribute
+from flask import render_template, url_for, redirect, flash, request, get_template_attribute, jsonify
 from site_atividade.forms import FormLogin, FormCadastroUsuario, FormListarUsuario, VendasForm, PagamentoForm, \
     FormEditarUsuario, FormAtualizarSenha
 from site_atividade import app, database, bcrypt
@@ -211,6 +211,8 @@ def atualizar_senha(id):
 
     return redirect(url_for('usuarios'))
 
+
+
 @app.route("/vendas", methods=['GET', 'POST'])
 @login_required
 def vendas():
@@ -234,7 +236,9 @@ def vendas():
             produto.estoque -= quantidade
             database.session.commit()
 
-            return redirect(url_for('vendas'))
+            vendas = Venda.query.all()
+
+            return render_template('vendas.html', form=form, produtos=produtos, vendas=vendas)
 
     vendas = Venda.query.all()
 
@@ -245,6 +249,37 @@ def vendas():
         return redirect(url_for('vendas'))
 
     return render_template('vendas.html', form=form, produtos=produtos, vendas=vendas)
+
+
+@app.route("/adicionar_venda", methods=['POST'])
+@login_required
+def adicionar_venda():
+    produto_id = request.form.get('produto_id')
+    quantidade = request.form.get('quantidade')
+
+    produto = Produtos.query.get(produto_id)
+
+    if produto is None:
+        return jsonify({'success': False, 'message': 'Produto não encontrado'})
+    elif produto.estoque < int(quantidade):
+        return jsonify({'success': False, 'message': 'Estoque insuficiente'})
+
+    venda = Venda(produto_id=produto_id, quantidade=int(quantidade))
+    venda.total = produto.preco * int(quantidade)
+    database.session.add(venda)
+    produto.estoque -= int(quantidade)
+    database.session.commit()
+
+    vendas = Venda.query.all()
+    vendas_html = render_template('vendas.html', vendas=vendas)
+
+    return jsonify({'success': True, 'vendas_html': vendas_html})
+
+
+
+
+
+
 
 @app.route('/pagamento', methods=['GET', 'POST'])
 @login_required

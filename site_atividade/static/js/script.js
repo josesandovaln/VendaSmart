@@ -61,22 +61,68 @@ document.addEventListener('DOMContentLoaded', function() {
 $(document).ready(function() {
   // Botão de adicionar quantidade
   $(".btn-add-quantity").click(function() {
-      var produtoId = $(this).data("produto-id");
-      // Realize a lógica para adicionar a quantidade desejada ao produto com o ID 'produtoId'
-      // ...
+    var quantidadeElement = $(this).closest("tr").find(".quantidade");
+
+    // Obtém a quantidade atual do produto
+    var quantidadeAtual = parseInt(quantidadeElement.text());
+
+    // Incrementa a quantidade
+    quantidadeAtual++;
+
+    // Atualiza o valor exibido na tabela
+    quantidadeElement.text(quantidadeAtual);
   });
 
   // Botão de remover quantidade
   $(".btn-remove-quantity").click(function() {
-      var produtoId = $(this).data("produto-id");
-      // Realize a lógica para remover a quantidade desejada do produto com o ID 'produtoId'
-      // ...
+    var quantidadeElement = $(this).closest("tr").find(".quantidade");
+
+    // Obtém a quantidade atual do produto
+    var quantidadeAtual = parseInt(quantidadeElement.text());
+
+    // Verifica se a quantidade atual é maior que zero antes de decrementar
+    if (quantidadeAtual > 0) {
+      // Decrementa a quantidade
+      quantidadeAtual--;
+
+      // Atualiza o valor exibido na tabela
+      quantidadeElement.text(quantidadeAtual);
+    }
   });
 
   // Botão de adicionar à venda
-  $(".btn-add-venda").click(function() {
-      var produtoId = $(this).data("produto-id");
-      // Realize a lógica para adicionar o produto com o ID 'produtoId' à tabela de vendas
-      // ...
+  $('.btn-add-venda').click(function() {
+    var produtoId = $(this).data('produto-id');
+    var quantidade = parseInt($(this).siblings('.quantidade').text());
+
+    if (quantidade === 0) {
+      // Exibe uma flash message informando que a quantidade não pode ser zero
+      var flashMessage = $('<div class="flash-message">A quantidade não pode ser zero.</div>');
+      $('body').append(flashMessage);
+      setTimeout(function() {
+        flashMessage.remove();
+      }, 3000); // Remove a flash message após 3 segundos
+      return;
+    }
+
+    $.post('/adicionar_venda', {produto_id: produtoId, quantidade: quantidade}, function(data) {
+      if (data.success) {
+        // Atualize a tabela de vendas com os novos dados
+        $('.table-vendas tbody').html(data.vendas_html);
+      } else {
+        // Exiba uma mensagem de erro, se necessário
+        var flashMessage = $('<div class="flash-message">' + data.message + '</div>');
+        $('body').append(flashMessage);
+        setTimeout(function() {
+          flashMessage.remove();
+        }, 3000); // Remove a flash message após 3 segundos
+      }
+    });
   });
 });
+
+
+
+
+
+

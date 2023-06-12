@@ -5,7 +5,7 @@
     <div class="container theme-showcase" role="main">
         <br>
         <div class="page-header">
-            <h2 class="box-title col-md-12">Realizar Venda</h2>
+            <h2 class="box-title col-md-12">Venda</h2>
         </div>
 
         <br>
@@ -26,61 +26,70 @@
             </form>
         </div>
 
-        <div class="list-product">
+        <div class="list-product-vendas">
             <table class="table table-hover scrollable-table">
-                <thead>
-                    <tr>
-                        <th class="text-center">Id</th>
-                        <th class="text-center">Produto</th>
-                        <th class="text-center">Marca</th>
-                        <th class="text-center">Preço Final</th>
-                        <th class="text-center">Estoque</th>
-                        <th class="text-center">Ação</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for produto in produtos %}
-                    <tr>
-                        <td class="text-center">{{ produto.id_produtos }}</td>
-                        <td class="text-center">{{ produto.produto }}</td>
-                        <td class="text-center">{{ produto.marca }}</td>
-                        <td class="text-center">{{ "{:.2f}".format(produto.preco).replace('.', ',') }}</td>
-                        <td class="text-center">{{ produto.estoque }}</td>
-                        <td class="text-center">
-                            <button class="btn btn-sm btn-primary btn-add-quantity" data-produto-id="{{ produto.id_produtos }}">+</button>
-                            <button class="btn btn-sm btn-danger btn-remove-quantity" data-produto-id="{{ produto.id_produtos }}">-</button>
-                            <button class="btn btn-sm btn-success btn-add-venda" data-produto-id="{{ produto.id_produtos }}">Adicionar à venda</button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-
-        <br>
-        <table class="table table-hover" overflow="scroll">
-            <thead>
+              <thead>
                 <tr>
-                    <th>Código</th>
-                    <th>Nome do Produto</th>
-                    <th>Preço unitário</th>
-                    <th>Quantidade Vendida</th>
-                    <th>Valor total</th>
+                  <th class="text-center">Id</th>
+                  <th class="text-center">Produto</th>
+                  <th class="text-center">Marca</th>
+                  <th class="text-center">Preço Final</th>
+                  <th class="text-center">Estoque</th>
+                  <th class="text-center"> </th>
                 </tr>
-            </thead>
-            <tbody>
-                {% for venda in vendas %}
+              </thead>
+              <tbody>
+                {% for produto in produtos %}
                 <tr>
-                    <td>{{ venda.produto.id_produtos }}</td>
-                    <td>{{ venda.produto.produto }}</td>
-                    <td>{{ venda.produto.preco }}</td>
-                    <td>{{ venda.quantidade }}</td>
-                    <td>{{ venda.total }}</td>
+                  <td class="text-center">{{ produto.id_produtos }}</td>
+                  <td class="text-center">{{ produto.produto }}</td>
+                  <td class="text-center">{{ produto.marca }}</td>
+                  <td class="text-center">{{ "{:.2f}".format(produto.preco).replace('.', ',') }}</td>
+                  <td class="text-center">{{ produto.estoque }}</td>
+                  <td class="text-center">
+                    <button class="btn btn-sm btn-color1 text-white btn-add-quantity" data-produto-id="{{ produto.id_produtos }}">+</button>
+                    <span class="quantidade">0</span>
+                    <button class="btn btn-sm btn-color2 text-white btn-remove-quantity" data-produto-id="{{ produto.id_produtos }}">-</button>
+                    <button class="btn btn-sm btn-color3 btn-add-venda" data-produto-id="{{ produto.id_produtos }}">Adicionar à venda</button>
+                  </td>
                 </tr>
                 {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          
+          <br>
+
+          <div class="page-header">
+            <h2 class="box-title col-md-12">Itens da Venda</h2>
+          </div>
+          
+          <br>
+          
+          <table class="table table-hover table-vendas">
+            <thead>
+              <tr>
+                <th class="text-center">Id</th>
+                <th class="text-center">Produto</th>
+                <th class="text-center">Marca</th>
+                <th class="text-center">Preço Final</th>
+                <th class="text-center">Quantidade Vendida</th>
+                <th class="text-center">Valor total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for venda in vendas %}
+              <tr>
+                <td class="text-center">{{ venda.produto.id_produtos }}</td>
+                <td class="text-center">{{ venda.produto.produto }}</td>
+                <td class="text-center">{{ venda.produto.marca }}</td>
+                <td class="text-center">{{ "{:.2f}".format(venda.produto.preco).replace('.', ',') }}</td>
+                <td class="text-center">{{ venda.quantidade }}</td>
+                <td class="text-center">{{ "{:.2f}".format(venda.total).replace('.', ',') }}</td>
+              </tr>
+              {% endfor %}
             </tbody>
-        </table>
+          </table>
 
         <br>
 
