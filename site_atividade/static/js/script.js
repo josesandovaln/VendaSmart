@@ -91,7 +91,8 @@ $(document).ready(function() {
   });
 
   // Botão de adicionar à venda
-  $('.btn-add-venda').click(function() {
+// Botão de adicionar à venda
+  $(document).on('click', '.btn-add-venda', function() {
     var produtoId = $(this).data('produto-id');
     var quantidade = parseInt($(this).siblings('.quantidade').text());
 
@@ -107,8 +108,11 @@ $(document).ready(function() {
 
     $.post('/adicionar_venda', {produto_id: produtoId, quantidade: quantidade}, function(data) {
       if (data.success) {
-        // Atualize a tabela de vendas com os novos dados
-        $('.table-vendas tbody').html(data.vendas_html);
+        // Atualiza o conteúdo da variável vendas_html
+        var vendas_html = data.vendas_html;
+
+        // Substitui todo o corpo da tabela de vendas com o novo conteúdo
+        $('.table-vendas tbody').html(vendas_html);
       } else {
         // Exiba uma mensagem de erro, se necessário
         var flashMessage = $('<div class="flash-message">' + data.message + '</div>');
@@ -117,8 +121,9 @@ $(document).ready(function() {
           flashMessage.remove();
         }, 3000); // Remove a flash message após 3 segundos
       }
-    });
+    }, 'json');
   });
+
 });
 
 

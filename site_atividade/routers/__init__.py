@@ -1,5 +1,6 @@
 from datetime import datetime
-from flask import render_template, url_for, redirect, flash, request, get_template_attribute, jsonify
+from flask import render_template, url_for, redirect, flash, request, get_template_attribute, jsonify, \
+    render_template_string
 from site_atividade.forms import FormLogin, FormCadastroUsuario, FormListarUsuario, VendasForm, PagamentoForm, \
     FormEditarUsuario, FormAtualizarSenha
 from site_atividade import app, database, bcrypt
@@ -271,7 +272,7 @@ def adicionar_venda():
     database.session.commit()
 
     vendas = Venda.query.all()
-    vendas_html = render_template('vendas.html', vendas=vendas)
+    vendas_html = render_template_string('{% for venda in vendas %}<tr><td class="text-center">{{ venda.produto.id_produtos }}</td><td class="text-center">{{ venda.produto.produto }}</td><td class="text-center">{{ venda.produto.marca }}</td><td class="text-center">{{ "{:.2f}".format(venda.produto.preco).replace(".", ",") }}</td><td class="text-center">{{ venda.quantidade }}</td><td class="text-center">{{ "{:.2f}".format(venda.total).replace(".", ",") }}</td></tr>{% endfor %}', vendas=vendas)
 
     return jsonify({'success': True, 'vendas_html': vendas_html})
 

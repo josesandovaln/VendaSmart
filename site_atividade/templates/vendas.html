@@ -95,12 +95,12 @@
 
         <div class="form-group">
             <form method="post" action="{{ url_for('pagamento') }}" class="d-inline-block">
-                <button type="submit" class="btn btn-secondary">Efetivar Venda</button>
+                <button type="submit" class="btn btn-color1 text-white">Efetivar Venda</button>
             </form>
 
             <form method="post" action="{{ url_for('vendas') }}" class="d-inline-block">
                 <input type="hidden" name="LimparVendas" value="sim">
-                <button type="submit" class="btn btn-danger">Limpar Vendas</button>
+                <button type="submit" class="btn btn-color2 text-white">Limpar Vendas</button>
             </form>
         </div>
     </div>
