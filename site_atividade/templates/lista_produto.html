@@ -72,7 +72,7 @@
             </div>
 
             <div class="modal fade" id="addCategoriaModal" tabindex="-1" role="dialog" aria-labelledby="addCategoriaModalLabel">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="addCategoriaModalLabel">Nova Categoria</h5>
@@ -97,7 +97,7 @@
             </div>
 
             <div class="modal fade" id="addProdutoModal" tabindex="-1" role="dialog" aria-labelledby="addProdutoModalLabel">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="addProdutoModalLabel">Cadastro de Produto</h5>
@@ -107,15 +107,15 @@
                         </div>
                         <div class="modal-body">
                             <form method="POST" action="{{ url_for('novo_produto') }}">
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="produto">Nome:</label>
                                     <input name="produto" type="text" class="form-control" required>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="marca">Marca:</label>
                                     <input name="marca" type="text" class="form-control" required>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="categoria_fk" class="control-label" id="categoria_fk">Categoria:</label>
                                     <select name="categoria_fk" class="form-control">
                                         {% for categoria in categorias %}
@@ -123,19 +123,19 @@
                                         {% endfor %}
                                     </select>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="precoAquisicao">Preço de Aquisição (R$):</label>
                                     <input name="preco_aquisicao" type="number" class="form-control" step="0.01" required>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="preco">Preço Final (R$):</label>
                                     <input name="preco" type="number" class="form-control" step="0.01" required>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="estoque">Estoque inicial:</label>
                                     <input name="estoque" type="number" class="form-control" required>
                                 </div>
-                                <div class="modal-footer">
+                                <div class="modal-footer mb-3">
                                     <button type="button" class="btn btn-color2 text-white" data-dismiss="modal">Cancelar</button>
                                     <button type="submit" class="btn btn-color1 text-white">Salvar</button>
                                 </div>
@@ -148,7 +148,7 @@
             {% for produto in produtos %}
 
             <div class="modal fade" id="deleteProdutoModal{{ produto.id_produtos }}" tabindex="-1" role="dialog" aria-labelledby="deleteProdutoModalLabel{{ produto.id_produtos }}">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="deleteProdutoModalLabel{{ produto.id_produtos }}">Excluir Produto</h5>
@@ -170,7 +170,7 @@
             </div>
 
             <div class="modal fade" id="editProdutoModal{{ produto.id_produtos }}" tabindex="-1" role="dialog" aria-labelledby="editProdutoModalLabel{{ produto.id_produtos }}">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="editProdutoModalLabel{{ produto.id_produtos }}">Editar Produto</h5>
@@ -180,27 +180,27 @@
                         </div>
                         <div class="modal-body">
                             <form method="post" action="{{ url_for('editar_produto', id=produto.id_produtos) }}">
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="produto">Produto:</label>
                                     <input type="text" class="form-control" id="produto" name="produto" value="{{ produto.produto }}">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="preco">Marca:</label>
                                     <input type="text" class="form-control" id="marca" name="marca" value="{{ produto.marca }}">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="preco">Preço Aquisição:</label>
                                     <input type="number" class="form-control" id="preco-aquisicao" name="preco_aquisicao" step="0.01" min="0" value="{{ produto.preco_aquisicao }}">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="preco">Preço Final:</label>
                                     <input type="number" class="form-control" id="preco" name="preco" step="0.01" min="0" value="{{ produto.preco }}">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="estoque">Estoque:</label>
                                     <input type="number" class="form-control" id="estoque" name="estoque" min="0" value="{{ produto.estoque }}">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="categoria">Categoria:</label>
                                     <select class="form-control" id="categoria" name="categoria_fk">
                                         {% for categoria in categorias %}

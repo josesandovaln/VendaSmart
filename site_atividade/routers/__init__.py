@@ -293,6 +293,7 @@ def pagamento():
     if form.validate_on_submit():
         metodo_pagamento = form.metodo_pagamento.data
         valor_pago = form.valor_pago.data.replace('.', ',')
+        parcelas = form.parcelas.data if form.metodo_pagamento.data == 'cartao_de_credito' else None
 
         if not valor_pago:
             return render_template('pagamento.html', erro='Valor de pagamento é obrigatório.', metodo_pagamento=metodo_pagamento, total=total)
@@ -301,7 +302,7 @@ def pagamento():
 
         troco = valor_pago - total if valor_pago >= total else 0
 
-        return render_template('pagamento.html', metodo_pagamento=metodo_pagamento, total=total, valor_pago=valor_pago, troco=troco)
+        return render_template('pagamento.html', metodo_pagamento=metodo_pagamento, total=total, valor_pago=valor_pago, troco=troco, parcelas=parcelas)
 
     return render_template('pagamento.html', form=form, total=total)
 

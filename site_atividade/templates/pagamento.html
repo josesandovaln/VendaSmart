@@ -17,6 +17,11 @@
                 {{ form.metodo_pagamento(class_='form-control', placeholder='Método de Pagamento') }}
             </div>
 
+            <div class="form-group" id="parcelas-field">
+              <label for="{{ form.parcelas.id }}">Número de Parcelas:</label>
+              {{ form.parcelas(class_='form-control', placeholder='Número de Parcelas') }}
+            </div>
+
             <br>
 
             <div class="form-group">
@@ -48,7 +53,7 @@
               </div>
               <div class="col-md-6">
                 {% if troco %}
-                  <h4><strong>Troco: R$ {{ troco }}</strong></h4>
+                  <h4><strong>Troco: R$ <span style="font-weight: bold">{{ troco }}</span></strong></h4>
                 {% endif %}
               </div>
             </div>

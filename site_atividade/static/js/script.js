@@ -127,7 +127,44 @@ $(document).ready(function() {
 });
 
 
+//////////////////////////    CARTÃO DE CREDITO    ///////////////////////////////////
+$(document).ready(function() {
+  // Oculta o campo de seleção de parcelas inicialmente
+  $('#parcelas-field').hide();
+
+  // Mostra ou oculta o campo de seleção de parcelas com base na seleção do método de pagamento
+  $('#metodo_pagamento').change(function() {
+      if ($(this).val() === 'cartao_de_credito') {
+          $('#parcelas-field').show();
+      } else {
+          $('#parcelas-field').hide();
+      }
+  });
+});
+//////////////////////////    CARTÃO DE CREDITO    ///////////////////////////////////
 
 
+// JavaScript code to handle modal button clicks and form submission
+document.addEventListener('DOMContentLoaded', function () {
+  var enviarWhatsappBtn = document.getElementById('enviar-whatsapp-btn');
+  var enviarEmailBtn = document.getElementById('enviar-email-btn');
+  var enviarComprovanteForm = document.getElementById('enviar-comprovante-form');
 
+  enviarWhatsappBtn.addEventListener('click', function () {
+      // Redirect to WhatsApp using the chosen data
+      window.location.href = 'https://api.whatsapp.com/send?text=' + encodeURIComponent('Dados do pagamento: ...');
+  });
+
+  enviarEmailBtn.addEventListener('click', function () {
+      // Open email client with pre-filled data
+      window.location.href = 'mailto:?subject=Comprovante de Pagamento&body=Dados do pagamento: ...';
+  });
+
+  enviarComprovanteForm.addEventListener('submit', function (event) {
+      // Prevent form submission
+      event.preventDefault();
+      // Show the modal
+      $('#escolher-modal').modal('show');
+  });
+});
 

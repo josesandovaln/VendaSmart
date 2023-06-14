@@ -38,4 +38,9 @@ class VendasForm(FlaskForm):
 class PagamentoForm(FlaskForm):
     metodo_pagamento = SelectField('Método de Pagamento', choices=[('dinheiro', 'Dinheiro'), ('cartao de crédito', 'Cartão de crédito'), ('cartao de débito', 'Cartão de débito'), ('pix', 'Pix')], validators=[DataRequired()])
     valor_pago = FloatField('Valor do Pagamento', validators=[DataRequired()])
+    parcelas = SelectField('Número de Parcelas', choices=[
+        (1, '1x'),
+        (2, '2x'),
+        (3, '3x'),
+    ])
     submit = SubmitField('Confirmar')
