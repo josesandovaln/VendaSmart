@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, FloatField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, FloatField, SelectField, \
+    DateField
 from wtforms.validators import DataRequired, length, email, equal_to, Length, EqualTo
 
 
@@ -44,3 +45,6 @@ class PagamentoForm(FlaskForm):
         (3, '3x'),
     ])
     submit = SubmitField('Confirmar')
+
+class RelatorioVendasDiarioForm(FlaskForm):
+    data = DateField('Data', validators=[DataRequired()])

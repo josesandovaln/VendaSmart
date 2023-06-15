@@ -59,6 +59,7 @@ class Venda(database.Model):
     produto_id = database.Column(database.Integer, database.ForeignKey('produtos.id_produtos'), nullable=False)
     quantidade = database.Column(database.Integer, nullable=False)
     total = database.Column(database.Float, nullable=False)
+    data_venda = database.Column(database.Date, default=datetime.now().date, nullable=False)
 
 class Pagamento(database.Model):
     id_pagamento = database.Column(database.Integer, primary_key=True)

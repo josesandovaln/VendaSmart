@@ -90,7 +90,7 @@ $(document).ready(function() {
     }
   });
 
-  // Botão de adicionar à venda
+
 // Botão de adicionar à venda
   $(document).on('click', '.btn-add-venda', function() {
     var produtoId = $(this).data('produto-id');

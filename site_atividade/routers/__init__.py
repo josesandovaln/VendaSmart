@@ -50,7 +50,7 @@ def nova_categoria():
     nova_categoria = Categoria(categoria=categoria)
     database.session.add(nova_categoria)
     database.session.commit()
-    flash('Nova categoria adicionada com sucesso!')
+    flash('Nova categoria adicionada com sucesso!', 'alert-success')
     return redirect(url_for('produtos'))
 
 @app.route("/delete-produto/<int:id>", methods=['GET', 'POST'])
@@ -203,11 +203,11 @@ def atualizar_senha(id):
         if not usuario.verificar_senha(senha_atual):
             flash('Senha atual incorreta.', 'danger')
         elif nova_senha != confirmar_senha:
-            flash('A nova senha e a confirmação da senha não coincidem.', 'danger')
+            flash('A nova senha e a confirmação da senha não coincidem.', 'alert-danger')
         else:
             usuario.set_senha(nova_senha)
             database.session.commit()
-            flash('Senha atualizada com sucesso.', 'success')
+            flash('Senha atualizada com sucesso.', 'alert-success')
             return redirect(url_for('usuarios'))
 
     return redirect(url_for('usuarios'))
@@ -227,9 +227,9 @@ def vendas():
         produto = Produtos.query.get(produto_id)
 
         if produto is None:
-            flash('Produto não encontrado', 'danger')
+            flash('Produto não encontrado', 'alert-danger')
         elif produto.estoque < quantidade:
-            flash('Estoque insuficiente', 'danger')
+            flash('Estoque insuficiente', 'alert-danger')
         else:
             venda = Venda(produto_id=produto_id, quantidade=quantidade)
             venda.total = produto.preco * quantidade
@@ -306,6 +306,7 @@ def pagamento():
 
     return render_template('pagamento.html', form=form, total=total)
 
+
 @app.route('/confirmar_pagamento', methods=['POST'])
 @login_required
 def confirmar_pagamento():
@@ -322,12 +323,12 @@ def confirmar_pagamento():
 
         troco = valor_pago - total
 
+        vendas = Venda.query.all()
+
         pagamento = Pagamento(metodo_pagamento=metodo_pagamento, valor_pagamento=valor_pago, troco=troco, data_pagamento=datetime.now())
+        pagamento.vendas = vendas
 
         database.session.add(pagamento)
-        database.session.commit()
-
-        database.session.query(Venda).delete()
         database.session.commit()
 
         return render_template('confirmacao_pagamento.html', pagamento=pagamento)
@@ -337,8 +338,13 @@ def confirmar_pagamento():
 
 
 
+@app.route("/relatorio_vendas_diario")
+@login_required
+def relatorio_vendas_diario():
+    data_atual = datetime.now().date()
+    vendas = Venda.query.filter(Venda.data_venda == data_atual).all()
 
-
+    return render_template('relatorio_vendas_diario.html', vendas=vendas, data_atual=data_atual)
 
 
 

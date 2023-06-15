@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <h1>Relatório de Vendas Diário - {{ data_atual }}</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID Venda</th>
+        <th>Produto</th>
+        <th>Quantidade</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for venda in vendas %}
+      <tr>
+        <td>{{ venda.id_venda }}</td>
+        <td>{{ venda.produto.produto }}</td>
+        <td>{{ venda.quantidade }}</td>
+        <td>{{ venda.total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
