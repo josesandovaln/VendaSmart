@@ -24,7 +24,7 @@
             </div>
 
 
-            <table class="table table-hover" overflow="scroll">
+            <table class="table table-hover table-centered" overflow="scroll">
                 <thead class="table-dark">
                     <tr>
                         <th class="table-rounded-start">Id</th>
@@ -40,7 +40,7 @@
                         </td> <td>{{ usuario.id }}</td>
                         <td>{{ usuario.usuario }}</td>
                         <td>{{ usuario.email }}</td>
-                        <td>
+                        <td class="btn-usuario">
                             <a class="btn btn-color1 text-white" href="{{ url_for('editar_usuario', id=usuario.id) }}" data-toggle="modal" data-target="#editarUsuarioModal{{ usuario.id }}">Editar</a>
                             <a class="btn btn-color2 text-white excluir-usuario-btn" data-toggle="modal" data-target="#excluirUsuarioModal{{ usuario.id }}">Excluir</a>
                             <a class="btn btn-color3" data-toggle="modal" data-target="#atualizarSenhaModal{{ usuario.id }}">Atualizar Senha</a>
