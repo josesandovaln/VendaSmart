@@ -151,14 +151,61 @@ document.addEventListener('DOMContentLoaded', function () {
   var enviarComprovanteForm = document.getElementById('enviar-comprovante-form');
 
   enviarWhatsappBtn.addEventListener('click', function () {
-      // Redirect to WhatsApp using the chosen data
-      window.location.href = 'https://api.whatsapp.com/send?text=' + encodeURIComponent('Dados do pagamento: ...');
+    // Requisição AJAX para obter as informações do último pagamento
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/obter_ultimo_pagamento');
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var ultimoPagamento = JSON.parse(xhr.responseText).ultimo_pagamento;
+
+            // Obtém as informações do último pagamento
+            var metodoPagamento = ultimoPagamento.metodo_pagamento;
+            var valorPagamento = ultimoPagamento.valor_pagamento;
+            var troco = ultimoPagamento.troco;
+            var valorTotalVendas = ultimoPagamento.valor_total_vendas;  // Obtém o valor total das vendas
+
+            // Cria a mensagem com as informações do pagamento
+            var mensagem = 'Dados do pagamento:\n';
+            mensagem += 'Método de pagamento: ' + metodoPagamento + '\n';
+            mensagem += 'Valor do pagamento: R$ ' + valorPagamento + '\n';
+            mensagem += 'Troco: R$ ' + troco + '\n';
+            mensagem += 'Valor total da compra: R$ ' + valorTotalVendas + '\n';  // Adiciona o valor total das vendas
+            mensagem += 'Data do pagamento: ' + ultimoPagamento.data_pagamento;
+
+            // Redireciona para o WhatsApp com a mensagem preenchida
+            window.location.href = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem);
+        }
+    };
+    xhr.send();
   });
+  
 
   enviarEmailBtn.addEventListener('click', function () {
-      // Open email client with pre-filled data
-      window.location.href = 'mailto:?subject=Comprovante de Pagamento&body=Dados do pagamento: ...';
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/obter_ultimo_pagamento');
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var ultimoPagamento = JSON.parse(xhr.responseText).ultimo_pagamento;
+
+            var metodoPagamento = ultimoPagamento.metodo_pagamento;
+            var valorPagamento = ultimoPagamento.valor_pagamento;
+            var troco = ultimoPagamento.troco;
+            var valorTotalVendas = ultimoPagamento.valor_total_vendas;
+            var dataPagamento = ultimoPagamento.data_pagamento;
+
+            var emailCorpo = 'Dados do pagamento:\n\n';
+            emailCorpo += 'Método de pagamento: ' + metodoPagamento + '\n';
+            emailCorpo += 'Valor do pagamento: R$ ' + valorPagamento + '\n';
+            emailCorpo += 'Troco: R$ ' + troco + '\n';
+            emailCorpo += 'Valor total da compra: R$ ' + valorTotalVendas + '\n';
+            emailCorpo += 'Data do pagamento: ' + dataPagamento;
+
+            window.location.href = 'mailto:?subject=Comprovante de Pagamento&body=' + encodeURIComponent(emailCorpo);
+        }
+    };
+    xhr.send();
   });
+
 
   enviarComprovanteForm.addEventListener('submit', function (event) {
       // Prevent form submission

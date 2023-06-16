@@ -1,6 +1,8 @@
 from datetime import datetime
 from flask import render_template, url_for, redirect, flash, request, get_template_attribute, jsonify, \
     render_template_string
+from sqlalchemy import desc
+
 from site_atividade.forms import FormLogin, FormCadastroUsuario, FormListarUsuario, VendasForm, PagamentoForm, \
     FormEditarUsuario, FormAtualizarSenha
 from site_atividade import app, database, bcrypt
@@ -323,17 +325,53 @@ def confirmar_pagamento():
 
         troco = valor_pago - total
 
-        vendas = Venda.query.all()
-
-        pagamento = Pagamento(metodo_pagamento=metodo_pagamento, valor_pagamento=valor_pago, troco=troco, data_pagamento=datetime.now())
-        pagamento.vendas = vendas
+        pagamento = Pagamento(metodo_pagamento=metodo_pagamento, valor_pagamento=valor_pago, troco=troco,
+                              data_pagamento=datetime.now())
 
         database.session.add(pagamento)
+        database.session.commit()
+
+        database.session.query(Venda).delete()
         database.session.commit()
 
         return render_template('confirmacao_pagamento.html', pagamento=pagamento)
 
     return render_template('pagamento.html', form=form, total=total)
+
+
+
+
+@app.route('/obter_ultimo_pagamento', methods=['GET'])
+@login_required
+def obter_ultimo_pagamento():
+    ultimo_pagamento = Pagamento.query.order_by(desc(Pagamento.id_pagamento)).first()
+
+    # Verifica se existe um último pagamento
+    if ultimo_pagamento:
+        valor_total_vendas = sum([venda.total for venda in Venda.query.all()])
+        troco = ultimo_pagamento.troco
+
+        # Cria um dicionário com as informações do último pagamento
+        ultimo_pagamento_dict = {
+            'id_pagamento': ultimo_pagamento.id_pagamento,
+            'metodo_pagamento': ultimo_pagamento.metodo_pagamento,
+            'valor_pagamento': ultimo_pagamento.valor_pagamento,
+            'troco': troco,
+            'valor_total_vendas': valor_total_vendas,  # Adiciona o valor total das vendas
+            'data_pagamento': ultimo_pagamento.data_pagamento.strftime("%d/%m/%Y %H:%M:%S")
+        }
+
+        return jsonify(ultimo_pagamento=ultimo_pagamento_dict)
+    else:
+        # Retorna um objeto vazio se não houver último pagamento
+        return jsonify(ultimo_pagamento={})
+
+
+
+
+
+
+
 
 
 
