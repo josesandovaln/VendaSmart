@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, FloatField, SelectField, \
-    DateField
+    DateField, TextAreaField
 from wtforms.validators import DataRequired, length, email, equal_to, Length, EqualTo
 
 
@@ -48,3 +48,7 @@ class PagamentoForm(FlaskForm):
 
 class RelatorioVendasDiarioForm(FlaskForm):
     data = DateField('Data', validators=[DataRequired()])
+
+class HelpDeskForm(FlaskForm):
+    subject = StringField('Assunto', validators=[DataRequired()])
+    description = TextAreaField('Descrição', validators=[DataRequired()])

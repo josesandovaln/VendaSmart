@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container theme-showcase" role="main">
+  <br>
+  <div class="page-header">
+    <h1>Help Desk</h1>
+  </div>
+
+  <br>
+
+  <form method="post" action="{{ url_for('helpdesk') }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      {{ form.subject.label(class="form-label") }}
+      {{ form.subject(class="form-control") }}
+    </div>
+    <br>
+    <div class="form-group">
+      {{ form.description.label(class="form-label") }}
+      {{ form.description(class="form-control") }}
+    </div>
+    <br>
+    <button type="submit" class="btn btn-color3">Enviar</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,10 +1,13 @@
 from datetime import datetime
+
+import mail
 from flask import render_template, url_for, redirect, flash, request, get_template_attribute, jsonify, \
-    render_template_string
+    render_template_string, current_app
+from flask_mail import Message
 from sqlalchemy import desc
 
 from site_atividade.forms import FormLogin, FormCadastroUsuario, FormListarUsuario, VendasForm, PagamentoForm, \
-    FormEditarUsuario, FormAtualizarSenha
+    FormEditarUsuario, FormAtualizarSenha, HelpDeskForm
 from site_atividade import app, database, bcrypt
 from site_atividade.models import Usuario, Produtos, Categoria, Venda, Pagamento
 from flask_login import login_user, logout_user, login_required
@@ -367,7 +370,33 @@ def obter_ultimo_pagamento():
         return jsonify(ultimo_pagamento={})
 
 
+@app.route('/helpdesk', methods=['GET', 'POST'])
+@login_required
+def helpdesk():
+    form = HelpDeskForm()
 
+    if form.validate_on_submit():
+        # Lógica para enviar a solicitação de suporte aos desenvolvedores
+        subject = form.subject.data
+        description = form.description.data
+
+        # Exemplo: enviar um email para os desenvolvedores com os detalhes da solicitação
+        send_support_request_email(subject, description)
+
+        flash('Sua solicitação de suporte foi enviada com sucesso!', 'alert-success')
+        return redirect(url_for('helpdesk'))
+
+    return render_template('helpdesk.html', form=form)
+
+def send_support_request_email(subject, description):
+    # Crie uma instância da classe Message do Flask-Mail
+    message = Message(subject=subject, sender=current_app.config['MAIL_USERNAME'], recipients=[current_app.config['SUPPORT_EMAIL']])
+    
+    # Defina o corpo do email
+    message.body = description
+    
+    # Envie o email utilizando o objeto Mail e a função send() do Flask-Mail
+    mail.send(message)
 
 
 
