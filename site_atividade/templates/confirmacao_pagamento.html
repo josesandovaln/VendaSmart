@@ -10,32 +10,32 @@
         <br>
 
         <div class="row">
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">Método de Pagamento: {{ pagamento.metodo_pagamento }}</h4>
-                <p class="card-text">Valor Pago: R$ {{ pagamento.valor_pagamento }}</p>
-              </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Método de Pagamento: {{ pagamento.metodo_pagamento }}</h4>
+                        <p class="card-text">Valor Pago: R$ {{ pagamento.valor_pagamento }}</p>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <h4 class="card-title">Troco: R$ {{ '{:.2f}'.format(pagamento.troco) }}</h4>
-                <p class="card-text">Data do Pagamento: {{ pagamento.data_pagamento.strftime('%d/%m/%Y %H:%M:%S') }}</p>
-              </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Troco: R$ {{ '{:.2f}'.format(pagamento.troco) }}</h4>
+                        <p class="card-text">Data do Pagamento: {{ pagamento.data_pagamento.strftime('%d/%m/%Y %H:%M:%S') }}</p>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-        
+
         <br>
 
         <div class="form-group">
-          <form method="post" class="d-inline-block" id="enviar-comprovante-form">
-              <button type="button" class="btn btn-color3" data-toggle="modal" data-target="#escolher-modal">
-                  Enviar comprovante
-              </button>
-          </form>
+            <form method="post" class="d-inline-block" id="enviar-comprovante-form">
+                <button type="button" class="btn btn-color3" data-toggle="modal" data-target="#escolher-modal">
+                    Enviar comprovante
+                </button>
+            </form>
         </div>
 
         <!-- Modal -->

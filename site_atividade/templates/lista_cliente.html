@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container theme-showcase" role="main">
+        <br>
+        <div class="page-header">
+            <h2 class="box-title col-md-12">Clientes</h2>
+        </div>
+
+        <br>
+
+        <div class="search-box">
+            <form class="form-search" action="{{ url_for('clientes') }}" method="GET">
+                <div class="input-group form-group-search">
+                    <input type="text" class="form-control form-control-search" placeholder="Digite aqui o que você deseja pesquisar..." id="search-input" name="search">
+                    <span class="input-group-btn">
+                        <button class="btn-search" type="submit">
+                            <svg class="bi bi-search" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
+                                <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
+                            </svg>
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+
+        <div class="list-client">
+            <table class="table table-hover scrollable-table">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="text-center table-rounded-start">Id</th>
+                        <th class="text-center">Nome</th>
+                        <th class="text-center">Email</th>
+                        <th class="text-center">Telefone</th>
+                        <th class="table-rounded-end"> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in clientes %}
+                    <tr data-href="#">
+                        <td class="text-center">{{ cliente.id_cliente }}</td>
+                        <td class="text-center">{{ cliente.nome }}</td>
+                        <td class="text-center">{{ cliente.email }}</td>
+                        <td class="text-center">{{ cliente.telefone }}</td>
+                        <td class="btn-edit-delete text-right">
+                            <a class="btn btn-color1 text-white" data-toggle="modal" data-target="#editClienteModal{{ cliente.id_cliente }}">Editar</a>
+                            <a class="btn btn-color2 text-white" data-toggle="modal" data-target="#deleteClienteModal{{ cliente.id_cliente }}">Excluir</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <br>
+
+        <div class="pull-right">
+            <button type="button" class="btn btn-color3" data-toggle="modal" data-target="#addClienteModal">
+                Novo Cliente
+            </button>
+        </div>
+        
+        <!-- Modal Adicionar Cliente -->
+        <div class="modal fade" id="addClienteModal" tabindex="-1" role="dialog" aria-labelledby="addClienteModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addClienteModalLabel">Adicionar Cliente</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Formulário para adicionar cliente -->
+                        <form method="POST" action="{{ url_for('novo_cliente') }}">
+                            <div class="form-group">
+                                <label for="nome">Nome:</label>
+                                <input type="text" class="form-control" id="nome" name="nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="telefone">Telefone:</label>
+                                <input type="text" class="form-control" id="telefone" name="telefone" required>
+                            </div>
+                            <button type="submit" class="btn btn-color1">Adicionar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modais de Edição e Exclusão de Cliente -->
+        {% for cliente in clientes %}
+            <!-- Modal Editar Cliente -->
+            <div class="modal fade" id="editClienteModal{{ cliente.id_cliente }}" tabindex="-1" role="dialog" aria-labelledby="editClienteModalLabel{{ cliente.id_cliente }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editClienteModalLabel{{ cliente.id_cliente }}">Editar Cliente</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Formulário para editar cliente -->
+                            <form method="POST" action="{{ url_for('editar_cliente', id=cliente.id_cliente) }}">
+                                <div class="form-group">
+                                    <label for="nome">Nome:</label>
+                                    <input type="text" class="form-control" id="nome" name="nome" value="{{ cliente.nome }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ cliente.email }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="telefone">Telefone:</label>
+                                    <input type="text" class="form-control" id="telefone" name="telefone" value="{{ cliente.telefone }}" required>
+                                </div>
+                                <button type="submit" class="btn btn-color1">Salvar Alterações</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Excluir Cliente -->
+            
+            <div class="modal fade" id="deleteClienteModal{{ cliente.id_cliente }}" tabindex="-1" role="dialog" aria-labelledby="deleteClienteModalLabel{{ cliente.id_cliente }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteClienteModalLabel{{ cliente.id_cliente }}">Excluir Cliente</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Deseja realmente excluir o cliente "{{ cliente.nome }}"?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                            <form action="{{ url_for('delete_cliente', id=cliente.id_cliente) }}" method="POST">
+                                <button type="submit" class="btn btn-color2">Excluir</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        {% endfor %}
+    </div>
+{% endblock %}

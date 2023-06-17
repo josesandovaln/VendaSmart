@@ -20,6 +20,7 @@ class Usuario(database.Model, UserMixin):
     def set_senha(self, nova_senha):
         self.senha = bcrypt.generate_password_hash(nova_senha).decode('utf-8')
 
+
 class Produtos(database.Model):
     id_produtos = database.Column(database.Integer, primary_key=True)
     produto = database.Column(database.String, nullable=False)
@@ -29,7 +30,7 @@ class Produtos(database.Model):
     estoque = database.Column(database.Integer, nullable=False)
     margem_lucro = database.Column(database.Float, nullable=True)
     categoria_fk = database.Column(database.Integer, database.ForeignKey('categoria.id_categoria'), nullable=False)
-    venda = database.relationship('Venda', backref='produto')
+    itens_venda = database.relationship('ItemVenda', backref='produto')
 
     def calcular_margem_lucro(self):
         if self.preco != 0:
@@ -49,17 +50,36 @@ class Produtos(database.Model):
     def __repr__(self):
         return f'Produto({self.produto}, {self.marca}, {self.preco_aquisicao}, {self.preco}, {self.estoque}, {self.margem_lucro})'
 
+
 class Categoria(database.Model):
     id_categoria = database.Column(database.Integer, primary_key=True)
     categoria = database.Column(database.String, nullable=False)
     produtos = database.relationship('Produtos', backref='categoria', lazy=True)
 
+
+class Cliente(database.Model):
+    id_cliente = database.Column(database.Integer, primary_key=True)
+    nome = database.Column(database.String, nullable=False)
+    telefone = database.Column(database.String)
+    email = database.Column(database.String, nullable=False, unique=True)
+    vendas = database.relationship('Venda', backref='cliente')
+
+
+class ItemVenda(database.Model):
+    id_item_venda = database.Column(database.Integer, primary_key=True)
+    produto_id = database.Column(database.Integer, database.ForeignKey('produtos.id_produtos'), nullable=False)
+    venda_id = database.Column(database.Integer, database.ForeignKey('venda.id_venda'), nullable=False)
+    quantidade = database.Column(database.Integer, nullable=False)
+    valor_unitario = database.Column(database.Float, nullable=False)
+    total = database.Column(database.Float, nullable=False)
+
+
 class Venda(database.Model):
     id_venda = database.Column(database.Integer, primary_key=True)
-    produto_id = database.Column(database.Integer, database.ForeignKey('produtos.id_produtos'), nullable=False)
-    quantidade = database.Column(database.Integer, nullable=False)
-    total = database.Column(database.Float, nullable=False)
+    cliente_id = database.Column(database.Integer, database.ForeignKey('cliente.id_cliente'), nullable=False)
     data_venda = database.Column(database.Date, default=datetime.now().date, nullable=False)
+    itens_venda = database.relationship('ItemVenda', backref='venda')
+
 
 class Pagamento(database.Model):
     id_pagamento = database.Column(database.Integer, primary_key=True)

@@ -28,68 +28,68 @@
 
         <div class="list-product-vendas">
             <table class="table table-hover scrollable-table">
-              <thead class="table-dark">
-                <tr>
-                  <th class="text-center table-rounded-start">Id</th>
-                  <th class="text-center">Produto</th>
-                  <th class="text-center">Marca</th>
-                  <th class="text-center">Preço Final</th>
-                  <th class="text-center">Estoque</th>
-                  <th class="text-center table-rounded-end"> </th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for produto in produtos %}
-                <tr>
-                  <td class="text-center">{{ produto.id_produtos }}</td>
-                  <td class="text-center">{{ produto.produto }}</td>
-                  <td class="text-center">{{ produto.marca }}</td>
-                  <td class="text-center">{{ "{:.2f}".format(produto.preco).replace('.', ',') }}</td>
-                  <td class="text-center">{{ produto.estoque }}</td>
-                  <td class="text-center">
-                    <button class="btn btn-sm btn-color1 text-white btn-add-quantity" data-produto-id="{{ produto.id_produtos }}">+</button>
-                    <span class="quantidade">0</span>
-                    <button class="btn btn-sm btn-color2 text-white btn-remove-quantity" data-produto-id="{{ produto.id_produtos }}">-</button>
-                    <button class="btn btn-sm btn-color3 btn-add-venda" data-produto-id="{{ produto.id_produtos }}">Adicionar à venda</button>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
+                <thead class="table-dark">
+                    <tr>
+                        <th class="text-center table-rounded-start">Id</th>
+                        <th class="text-center">Produto</th>
+                        <th class="text-center">Marca</th>
+                        <th class="text-center">Preço Final</th>
+                        <th class="text-center">Estoque</th>
+                        <th class="text-center table-rounded-end"> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produto in produtos %}
+                    <tr>
+                        <td class="text-center">{{ produto.id_produtos }}</td>
+                        <td class="text-center">{{ produto.produto }}</td>
+                        <td class="text-center">{{ produto.marca }}</td>
+                        <td class="text-center">{{ "{:.2f}".format(produto.preco).replace('.', ',') }}</td>
+                        <td class="text-center">{{ produto.estoque }}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-color1 text-white btn-add-quantity" data-produto-id="{{ produto.id_produtos }}">+</button>
+                            <span class="quantidade">0</span>
+                            <button class="btn btn-sm btn-color2 text-white btn-remove-quantity" data-produto-id="{{ produto.id_produtos }}">-</button>
+                            <button class="btn btn-sm btn-color3 btn-add-venda" data-produto-id="{{ produto.id_produtos }}">Adicionar à venda</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
-          </div>
-          
-          <br>
+        </div>
 
-          <div class="page-header">
+        <br>
+
+        <div class="page-header">
             <h2 class="box-title col-md-12">Itens da Venda</h2>
-          </div>
-          
-          <br>
-          
-          <table class="table table-hover table-vendas">
+        </div>
+
+        <br>
+
+        <table class="table table-hover table-vendas">
             <thead class="table-dark">
-              <tr>
-                <th class="text-center table-rounded-start">Id</th>
-                <th class="text-center">Produto</th>
-                <th class="text-center">Marca</th>
-                <th class="text-center">Preço Final</th>
-                <th class="text-center">Quantidade Vendida</th>
-                <th class="text-center table-rounded-end">Valor total</th>
-              </tr>
+                <tr>
+                    <th class="text-center table-rounded-start">Id</th>
+                    <th class="text-center">Produto</th>
+                    <th class="text-center">Marca</th>
+                    <th class="text-center">Preço Final</th>
+                    <th class="text-center">Quantidade Vendida</th>
+                    <th class="text-center table-rounded-end">Valor total</th>
+                </tr>
             </thead>
             <tbody>
-              {% for venda in vendas %}
-              <tr>
-                <td class="text-center">{{ venda.produto.id_produtos }}</td>
-                <td class="text-center">{{ venda.produto.produto }}</td>
-                <td class="text-center">{{ venda.produto.marca }}</td>
-                <td class="text-center">{{ "{:.2f}".format(venda.produto.preco).replace('.', ',') }}</td>
-                <td class="text-center">{{ venda.quantidade }}</td>
-                <td class="text-center">{{ "{:.2f}".format(venda.total).replace('.', ',') }}</td>
-              </tr>
-              {% endfor %}
+                {% for venda in vendas %}
+                <tr>
+                    <td class="text-center">{{ venda.itens_venda[0].produto.id_produtos }}</td>
+                    <td class="text-center">{{ venda.itens_venda[0].produto.produto }}</td>
+                    <td class="text-center">{{ venda.itens_venda[0].produto.marca }}</td>
+                    <td class="text-center">{{ "{:.2f}".format(venda.itens_venda[0].produto.preco).replace('.', ',') }}</td>
+                    <td class="text-center">{{ venda.itens_venda[0].quantidade }}</td>
+                    <td class="text-center">{{ "{:.2f}".format(venda.itens_venda[0].total).replace('.', ',') }}</td>
+                </tr>
+                {% endfor %}
             </tbody>
-          </table>
+        </table>
 
         <br>
 
@@ -105,3 +105,4 @@
         </div>
     </div>
 {% endblock %}
+

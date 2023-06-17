@@ -17,10 +17,12 @@
                 {{ form.metodo_pagamento(class_='form-control', placeholder='Método de Pagamento') }}
             </div>
 
-            <div class="form-group" id="parcelas-field">
-              <label for="{{ form.parcelas.id }}">Número de Parcelas:</label>
-              {{ form.parcelas(class_='form-control', placeholder='Número de Parcelas') }}
-            </div>
+            {% if form.metodo_pagamento.data == 'cartao_de_credito' %}
+                <div class="form-group" id="parcelas-field">
+                    <label for="{{ form.parcelas.id }}">Número de Parcelas:</label>
+                    {{ form.parcelas(class_='form-control', placeholder='Número de Parcelas') }}
+                </div>
+            {% endif %}
 
             <br>
 
@@ -46,20 +48,20 @@
         <br>
 
         <div class="card bg-compra">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-6">
-                <h4><strong>Total da Compra:</strong> R$ {{ "{:.2f}".format(total) }}</h4>
-              </div>
-              <div class="col-md-6">
-                {% if troco %}
-                  <h4><strong>Troco: R$ <span style="font-weight: bold">{{ troco }}</span></strong></h4>
-                {% endif %}
-              </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4><strong>Total da Compra:</strong> R$ {{ "{:.2f}".format(total) }}</h4>
+                    </div>
+                    <div class="col-md-6">
+                        {% if troco %}
+                            <h4><strong>Troco: R$ <span style="font-weight: bold">{{ "{:.2f}".format(troco) }}</span></strong></h4>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-        
-        
+
     </div>
 {% endblock %}
+

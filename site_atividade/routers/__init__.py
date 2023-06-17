@@ -9,7 +9,7 @@ from sqlalchemy import desc
 from site_atividade.forms import FormLogin, FormCadastroUsuario, FormListarUsuario, VendasForm, PagamentoForm, \
     FormEditarUsuario, FormAtualizarSenha, HelpDeskForm
 from site_atividade import app, database, bcrypt
-from site_atividade.models import Usuario, Produtos, Categoria, Venda, Pagamento
+from site_atividade.models import Usuario, Produtos, Categoria, Venda, Pagamento, ItemVenda, Cliente
 from flask_login import login_user, logout_user, login_required
 
 
@@ -224,19 +224,24 @@ def atualizar_senha(id):
 def vendas():
     form = VendasForm(request.form)
     produtos = Produtos.query.all()
+    clientes = Cliente.query.all()  # Adicionado para obter a lista de clientes
 
     if request.method == 'POST' and form.validate():
+        cliente_id = form.cliente_id.data  # Adicionado para obter o ID do cliente selecionado
         produto_id = form.produto_id.data
         quantidade = form.quantidade.data
 
         produto = Produtos.query.get(produto_id)
+        cliente = Cliente.query.get(cliente_id)  # Adicionado para obter o cliente correspondente
 
         if produto is None:
             flash('Produto não encontrado', 'alert-danger')
         elif produto.estoque < quantidade:
             flash('Estoque insuficiente', 'alert-danger')
+        elif cliente is None:
+            flash('Cliente não encontrado', 'alert-danger')  # Adicionado para lidar com cliente inexistente
         else:
-            venda = Venda(produto_id=produto_id, quantidade=quantidade)
+            venda = Venda(produto_id=produto_id, quantidade=quantidade, cliente_id=cliente_id)  # Atualizado para incluir o ID do cliente
             venda.total = produto.preco * quantidade
             database.session.add(venda)
             produto.estoque -= quantidade
@@ -244,7 +249,7 @@ def vendas():
 
             vendas = Venda.query.all()
 
-            return render_template('vendas.html', form=form, produtos=produtos, vendas=vendas)
+            return render_template('vendas.html', form=form, produtos=produtos, clientes=clientes, vendas=vendas)
 
     vendas = Venda.query.all()
 
@@ -254,7 +259,8 @@ def vendas():
 
         return redirect(url_for('vendas'))
 
-    return render_template('vendas.html', form=form, produtos=produtos, vendas=vendas)
+    return render_template('vendas.html', form=form, produtos=produtos, clientes=clientes, vendas=vendas)
+
 
 
 @app.route("/adicionar_venda", methods=['POST'])
@@ -262,6 +268,7 @@ def vendas():
 def adicionar_venda():
     produto_id = request.form.get('produto_id')
     quantidade = request.form.get('quantidade')
+    cliente_id = request.form.get('cliente_id')  # Obtém o ID do cliente a partir do formulário
 
     produto = Produtos.query.get(produto_id)
 
@@ -270,16 +277,18 @@ def adicionar_venda():
     elif produto.estoque < int(quantidade):
         return jsonify({'success': False, 'message': 'Estoque insuficiente'})
 
-    venda = Venda(produto_id=produto_id, quantidade=int(quantidade))
-    venda.total = produto.preco * int(quantidade)
-    database.session.add(venda)
+    venda = Venda(cliente_id=cliente_id)
+    item_venda = ItemVenda(produto_id=produto_id, venda=venda, quantidade=int(quantidade), valor_unitario=produto.preco, total=produto.preco * int(quantidade))
+    database.session.add(item_venda)
     produto.estoque -= int(quantidade)
     database.session.commit()
 
     vendas = Venda.query.all()
-    vendas_html = render_template_string('{% for venda in vendas %}<tr><td class="text-center">{{ venda.produto.id_produtos }}</td><td class="text-center">{{ venda.produto.produto }}</td><td class="text-center">{{ venda.produto.marca }}</td><td class="text-center">{{ "{:.2f}".format(venda.produto.preco).replace(".", ",") }}</td><td class="text-center">{{ venda.quantidade }}</td><td class="text-center">{{ "{:.2f}".format(venda.total).replace(".", ",") }}</td></tr>{% endfor %}', vendas=vendas)
+    vendas_html = render_template_string('{% for venda in vendas %}<tr><td class="text-center">{{ venda.itens_venda[0].produto.id_produtos }}</td><td class="text-center">{{ venda.itens_venda[0].produto.produto }}</td><td class="text-center">{{ venda.itens_venda[0].produto.marca }}</td><td class="text-center">{{ "{:.2f}".format(venda.itens_venda[0].produto.preco).replace(".", ",") }}</td><td class="text-center">{{ venda.itens_venda[0].quantidade }}</td><td class="text-center">{{ "{:.2f}".format(venda.itens_venda[0].total).replace(".", ",") }}</td></tr>{% endfor %}', vendas=vendas)
 
     return jsonify({'success': True, 'vendas_html': vendas_html})
+
+
 
 
 
@@ -316,12 +325,13 @@ def pagamento():
 @login_required
 def confirmar_pagamento():
     form = PagamentoForm()
-    total = sum([venda.total for venda in Venda.query.all()])
+    vendas = Venda.query.all()
+    total = sum([venda.total for venda in vendas])
 
     if form.validate_on_submit():
         metodo_pagamento = form.metodo_pagamento.data
-        valor_pago = form.valor_pago.data
-        total = sum([venda.total for venda in Venda.query.all()])
+        valor_pago = form.valor_pago.data.replace('.', ',')
+        valor_pago = float(valor_pago)
 
         if valor_pago < total:
             return render_template('pagamento.html', erro='Valor de pagamento insuficiente.', form=form, total=total)
@@ -334,14 +344,11 @@ def confirmar_pagamento():
         database.session.add(pagamento)
         database.session.commit()
 
-        database.session.query(Venda).delete()
-        database.session.commit()
+        
 
         return render_template('confirmacao_pagamento.html', pagamento=pagamento)
 
     return render_template('pagamento.html', form=form, total=total)
-
-
 
 
 @app.route('/obter_ultimo_pagamento', methods=['GET'])
@@ -351,7 +358,8 @@ def obter_ultimo_pagamento():
 
     # Verifica se existe um último pagamento
     if ultimo_pagamento:
-        valor_total_vendas = sum([venda.total for venda in Venda.query.all()])
+        vendas = Venda.query.all()
+        valor_total_vendas = sum([venda.total for venda in vendas])
         troco = ultimo_pagamento.troco
 
         # Cria um dicionário com as informações do último pagamento
@@ -368,6 +376,87 @@ def obter_ultimo_pagamento():
     else:
         # Retorna um objeto vazio se não houver último pagamento
         return jsonify(ultimo_pagamento={})
+
+
+
+
+@app.route("/clientes")
+@login_required
+def clientes():
+    search_term = request.args.get('search')
+
+    if search_term:
+        clientes = Cliente.query.filter(Cliente.nome.ilike(f'%{search_term}%')).all()
+    else:
+        clientes = Cliente.query.all()
+
+    return render_template('lista_cliente.html', clientes=clientes)
+
+@app.route('/novo-cliente', methods=['GET', 'POST'])
+@login_required
+def novo_cliente():
+    if request.method == 'POST':
+        cliente = Cliente(
+            nome=request.form['nome'],
+            telefone=request.form['telefone'],
+            email=request.form['email']
+        )
+        database.session.add(cliente)
+        database.session.commit()
+        flash(f'O cliente {cliente.nome} foi criado com sucesso!', 'alert-success')
+        return redirect(url_for('clientes'))
+
+    return render_template('novo_cliente.html')
+
+@app.route("/editar-cliente/<int:id>", methods=['GET', 'POST'])
+@login_required
+def editar_cliente(id):
+    cliente = Cliente.query.get(id)
+    if request.method == 'POST':
+        cliente.nome = request.form['nome']
+        cliente.telefone = request.form['telefone']
+        cliente.email = request.form['email']
+        database.session.commit()
+        flash(f'Cliente "{cliente.nome}" editado com sucesso', 'alert-success')
+        return redirect(url_for('clientes'))
+
+    return render_template('editar_cliente.html', cliente=cliente)
+
+@app.route("/delete-cliente/<int:id>", methods=['GET', 'POST'])
+@login_required
+def delete_cliente(id):
+    cliente = Cliente.query.get(id)
+    if request.method == 'POST':
+        if cliente:
+            database.session.delete(cliente)
+            database.session.commit()
+            flash(f'Cliente "{cliente.nome}" excluído com sucesso', 'alert-success')
+        else:
+            flash(f'Cliente não encontrado', 'alert-danger')
+        return redirect(url_for('clientes'))
+
+    return render_template('delete_cliente.html', cliente=cliente)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @app.route('/helpdesk', methods=['GET', 'POST'])
