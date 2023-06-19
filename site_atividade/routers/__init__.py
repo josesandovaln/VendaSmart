@@ -2,8 +2,9 @@ from datetime import datetime
 
 import mail
 from flask import render_template, url_for, redirect, flash, request, get_template_attribute, jsonify, \
-    render_template_string, current_app
+    render_template_string, current_app, session
 from flask_mail import Message
+
 from sqlalchemy import desc
 
 from site_atividade.forms import FormLogin, FormCadastroUsuario, FormListarUsuario, VendasForm, PagamentoForm, \
@@ -222,71 +223,70 @@ def atualizar_senha(id):
 @app.route("/vendas", methods=['GET', 'POST'])
 @login_required
 def vendas():
-    form = VendasForm(request.form)
-    produtos = Produtos.query.all()
-    clientes = Cliente.query.all()  # Adicionado para obter a lista de clientes
+    search_query = request.args.get('search', '')
 
-    if request.method == 'POST' and form.validate():
-        cliente_id = form.cliente_id.data  # Adicionado para obter o ID do cliente selecionado
-        produto_id = form.produto_id.data
-        quantidade = form.quantidade.data
-
-        produto = Produtos.query.get(produto_id)
-        cliente = Cliente.query.get(cliente_id)  # Adicionado para obter o cliente correspondente
-
-        if produto is None:
-            flash('Produto não encontrado', 'alert-danger')
-        elif produto.estoque < quantidade:
-            flash('Estoque insuficiente', 'alert-danger')
-        elif cliente is None:
-            flash('Cliente não encontrado', 'alert-danger')  # Adicionado para lidar com cliente inexistente
-        else:
-            venda = Venda(produto_id=produto_id, quantidade=quantidade, cliente_id=cliente_id)  # Atualizado para incluir o ID do cliente
-            venda.total = produto.preco * quantidade
-            database.session.add(venda)
-            produto.estoque -= quantidade
-            database.session.commit()
-
-            vendas = Venda.query.all()
-
-            return render_template('vendas.html', form=form, produtos=produtos, clientes=clientes, vendas=vendas)
-
+    clientes = Cliente.query.all()
+    produtos = Produtos.query.filter(Produtos.produto.ilike(f'%{search_query}%')).all()
     vendas = Venda.query.all()
 
     if request.method == 'POST' and 'LimparVendas' in request.form:
-        Venda.query.delete()
+        ItemVenda.query.delete()
         database.session.commit()
 
         return redirect(url_for('vendas'))
 
-    return render_template('vendas.html', form=form, produtos=produtos, clientes=clientes, vendas=vendas)
-
+    return render_template('vendas.html', clientes=clientes, produtos=produtos, vendas=vendas, search_query=search_query)
 
 
 @app.route("/adicionar_venda", methods=['POST'])
 @login_required
 def adicionar_venda():
+    print('Rota /adicionar_venda chamada')
+    cliente_id = request.form.get('cliente_id') # Obtém o ID do cliente selecionado
+    cliente = Cliente.query.get(cliente_id)
+
+    if cliente is None:
+        return jsonify({'success': False, 'message': 'Cliente não encontrado'})
+
+    venda = Venda(cliente_id=cliente_id, data_venda=datetime.now().date())
+    database.session.add(venda)
+    database.session.commit()
+
+    flash(f'{cliente.nome} selecionado com sucesso', 'success')
+
+    return jsonify({'success': True})
+
+
+@app.route("/adicionar_item_venda", methods=['POST'])
+@login_required
+def adicionar_item_venda():
     produto_id = request.form.get('produto_id')
-    quantidade = request.form.get('quantidade')
-    cliente_id = request.form.get('cliente_id')  # Obtém o ID do cliente a partir do formulário
+    quantidade = int(request.form.get('quantidade'))
 
     produto = Produtos.query.get(produto_id)
 
     if produto is None:
         return jsonify({'success': False, 'message': 'Produto não encontrado'})
-    elif produto.estoque < int(quantidade):
+    elif produto.estoque < quantidade:
         return jsonify({'success': False, 'message': 'Estoque insuficiente'})
 
-    venda = Venda(cliente_id=cliente_id)
-    item_venda = ItemVenda(produto_id=produto_id, venda=venda, quantidade=int(quantidade), valor_unitario=produto.preco, total=produto.preco * int(quantidade))
+    venda = Venda.query.order_by(Venda.id_venda.desc()).first()
+    item_venda = ItemVenda(produto_id=produto_id, venda_id=venda.id_venda, quantidade=quantidade, valor_unitario=produto.preco, total=produto.preco * quantidade)
     database.session.add(item_venda)
-    produto.estoque -= int(quantidade)
+    produto.estoque -= quantidade
     database.session.commit()
 
-    vendas = Venda.query.all()
-    vendas_html = render_template_string('{% for venda in vendas %}<tr><td class="text-center">{{ venda.itens_venda[0].produto.id_produtos }}</td><td class="text-center">{{ venda.itens_venda[0].produto.produto }}</td><td class="text-center">{{ venda.itens_venda[0].produto.marca }}</td><td class="text-center">{{ "{:.2f}".format(venda.itens_venda[0].produto.preco).replace(".", ",") }}</td><td class="text-center">{{ venda.itens_venda[0].quantidade }}</td><td class="text-center">{{ "{:.2f}".format(venda.itens_venda[0].total).replace(".", ",") }}</td></tr>{% endfor %}', vendas=vendas)
+    venda = Venda.query.order_by(Venda.id_venda.desc()).first()
+
+    vendas_html = render_template_string('{% for item_venda in venda.itens_venda %}<tr><td class="text-center">{{ item_venda.produto.id_produtos }}</td><td class="text-center">{{ item_venda.produto.produto }}</td><td class="text-center">{{ item_venda.produto.marca }}</td><td class="text-center">{{ "{:.2f}".format(item_venda.produto.preco).replace(".", ",") }}</td><td class="text-center">{{ item_venda.quantidade }}</td><td class="text-center">{{ "{:.2f}".format(item_venda.total).replace(".", ",") }}</td></tr>{% endfor %}', venda=venda)
 
     return jsonify({'success': True, 'vendas_html': vendas_html})
+
+
+
+
+
+
 
 
 

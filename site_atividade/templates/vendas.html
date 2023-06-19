@@ -26,6 +26,21 @@
             </form>
         </div>
 
+        <div class="form-group">
+            <form method="post" action="{{ url_for('adicionar_venda') }}" class="form-inline">
+                <label for="cliente_id">Cliente:</label>
+                <select name="cliente_id" id="cliente_id" class="form-control">
+                    {% for cliente in clientes %}
+                    <option value="{{ cliente.id_cliente }}">{{ cliente.nome }}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <button type="submit" class="btn btn-primary btn-selecionar-cliente">Selecionar Cliente</button>
+            </form>
+        </div>
+
+        <br>
+
         <div class="list-product-vendas">
             <table class="table table-hover scrollable-table">
                 <thead class="table-dark">
@@ -45,7 +60,7 @@
                         <td class="text-center">{{ produto.produto }}</td>
                         <td class="text-center">{{ produto.marca }}</td>
                         <td class="text-center">{{ "{:.2f}".format(produto.preco).replace('.', ',') }}</td>
-                        <td class="text-center">{{ produto.estoque }}</td>
+                        <td class="text-center estoque">{{ produto.estoque }}</td>
                         <td class="text-center">
                             <button class="btn btn-sm btn-color1 text-white btn-add-quantity" data-produto-id="{{ produto.id_produtos }}">+</button>
                             <span class="quantidade">0</span>
@@ -63,9 +78,9 @@
         <div class="page-header">
             <h2 class="box-title col-md-12">Itens da Venda</h2>
         </div>
-
+        
         <br>
-
+        
         <table class="table table-hover table-vendas">
             <thead class="table-dark">
                 <tr>
@@ -79,17 +94,22 @@
             </thead>
             <tbody>
                 {% for venda in vendas %}
-                <tr>
-                    <td class="text-center">{{ venda.itens_venda[0].produto.id_produtos }}</td>
-                    <td class="text-center">{{ venda.itens_venda[0].produto.produto }}</td>
-                    <td class="text-center">{{ venda.itens_venda[0].produto.marca }}</td>
-                    <td class="text-center">{{ "{:.2f}".format(venda.itens_venda[0].produto.preco).replace('.', ',') }}</td>
-                    <td class="text-center">{{ venda.itens_venda[0].quantidade }}</td>
-                    <td class="text-center">{{ "{:.2f}".format(venda.itens_venda[0].total).replace('.', ',') }}</td>
-                </tr>
+                    {% for item_venda in venda.itens_venda %}
+                        <tr>
+                            <td class="text-center">{{ item_venda.produto.id_produtos }}</td>
+                            <td class="text-center">{{ item_venda.produto.produto }}</td>
+                            <td class="text-center">{{ item_venda.produto.marca }}</td>
+                            <td class="text-center">{{ "{:.2f}".format(item_venda.produto.preco).replace('.', ',') }}</td>
+                            <td class="text-center">{{ item_venda.quantidade }}</td>
+                            <td class="text-center">{{ "{:.2f}".format(item_venda.total).replace('.', ',') }}</td>
+                        </tr>
+                    {% endfor %}
                 {% endfor %}
             </tbody>
         </table>
+        
+        
+        
 
         <br>
 
@@ -105,4 +125,5 @@
         </div>
     </div>
 {% endblock %}
+
 
