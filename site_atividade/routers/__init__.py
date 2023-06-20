@@ -300,7 +300,7 @@ def adicionar_item_venda():
 @login_required
 def pagamento():
     vendas = Venda.query.all()
-    total = sum([venda.total for venda in vendas])
+    total = sum([item_venda.total for venda in vendas for item_venda in venda.itens_venda])
 
     form = PagamentoForm()
 
@@ -321,17 +321,17 @@ def pagamento():
     return render_template('pagamento.html', form=form, total=total)
 
 
-@app.route('/confirmar_pagamento', methods=['POST'])
+@app.route('/confirmar_pagamento', methods=['GET', 'POST'])
 @login_required
 def confirmar_pagamento():
     form = PagamentoForm()
     vendas = Venda.query.all()
-    total = sum([venda.total for venda in vendas])
+    total = sum([item_venda.total for venda in vendas for item_venda in venda.itens_venda])
 
     if form.validate_on_submit():
         metodo_pagamento = form.metodo_pagamento.data
-        valor_pago = form.valor_pago.data.replace('.', ',')
-        valor_pago = float(valor_pago)
+        valor_pago = form.valor_pago.data
+        total = sum([item_venda.total for venda in vendas for item_venda in venda.itens_venda])
 
         if valor_pago < total:
             return render_template('pagamento.html', erro='Valor de pagamento insuficiente.', form=form, total=total)
@@ -344,11 +344,14 @@ def confirmar_pagamento():
         database.session.add(pagamento)
         database.session.commit()
 
-        
+        database.session.query(ItemVenda).delete()
+        database.session.commit()
 
-        return render_template('confirmacao_pagamento.html', pagamento=pagamento)
+        return render_template('confirmacao_pagamento.html', pagamento=pagamento, total=total)
 
     return render_template('pagamento.html', form=form, total=total)
+
+
 
 
 @app.route('/obter_ultimo_pagamento', methods=['GET'])

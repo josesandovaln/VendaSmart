@@ -17,12 +17,10 @@
                 {{ form.metodo_pagamento(class_='form-control', placeholder='Método de Pagamento') }}
             </div>
 
-            {% if form.metodo_pagamento.data == 'cartao_de_credito' %}
-                <div class="form-group" id="parcelas-field">
-                    <label for="{{ form.parcelas.id }}">Número de Parcelas:</label>
-                    {{ form.parcelas(class_='form-control', placeholder='Número de Parcelas') }}
-                </div>
-            {% endif %}
+            <div class="form-group" id="parcelas-field">
+                <label for="{{ form.parcelas.id }}">Número de Parcelas:</label>
+                {{ form.parcelas(class_='form-control', placeholder='Número de Parcelas') }}
+            </div>
 
             <br>
 
