@@ -63,7 +63,7 @@
         
         <!-- Modal Adicionar Cliente -->
         <div class="modal fade" id="addClienteModal" tabindex="-1" role="dialog" aria-labelledby="addClienteModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="addClienteModalLabel">Adicionar Cliente</h5>
@@ -74,19 +74,19 @@
                     <div class="modal-body">
                         <!-- Formulário para adicionar cliente -->
                         <form method="POST" action="{{ url_for('novo_cliente') }}">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="nome">Nome:</label>
                                 <input type="text" class="form-control" id="nome" name="nome" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="email">Email:</label>
                                 <input type="email" class="form-control" id="email" name="email" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="telefone">Telefone:</label>
                                 <input type="text" class="form-control" id="telefone" name="telefone" required>
                             </div>
-                            <button type="submit" class="btn btn-color1">Adicionar</button>
+                            <button type="submit" class="btn btn-color1 text-white">Adicionar</button>
                         </form>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
         {% for cliente in clientes %}
             <!-- Modal Editar Cliente -->
             <div class="modal fade" id="editClienteModal{{ cliente.id_cliente }}" tabindex="-1" role="dialog" aria-labelledby="editClienteModalLabel{{ cliente.id_cliente }}" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="editClienteModalLabel{{ cliente.id_cliente }}">Editar Cliente</h5>
@@ -108,19 +108,19 @@
                         <div class="modal-body">
                             <!-- Formulário para editar cliente -->
                             <form method="POST" action="{{ url_for('editar_cliente', id=cliente.id_cliente) }}">
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="nome">Nome:</label>
                                     <input type="text" class="form-control" id="nome" name="nome" value="{{ cliente.nome }}" required>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="email">Email:</label>
                                     <input type="email" class="form-control" id="email" name="email" value="{{ cliente.email }}" required>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="telefone">Telefone:</label>
                                     <input type="text" class="form-control" id="telefone" name="telefone" value="{{ cliente.telefone }}" required>
                                 </div>
-                                <button type="submit" class="btn btn-color1">Salvar Alterações</button>
+                                <button type="submit" class="btn btn-color1 text-white">Salvar Alterações</button>
                             </form>
                         </div>
                     </div>
@@ -130,7 +130,7 @@
             <!-- Modal Excluir Cliente -->
             
             <div class="modal fade" id="deleteClienteModal{{ cliente.id_cliente }}" tabindex="-1" role="dialog" aria-labelledby="deleteClienteModalLabel{{ cliente.id_cliente }}" aria-hidden="true">
-                <div class="modal-dialog" role="document">
+                <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="deleteClienteModalLabel{{ cliente.id_cliente }}">Excluir Cliente</h5>
@@ -142,10 +142,10 @@
                             <p>Deseja realmente excluir o cliente "{{ cliente.nome }}"?</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                             <form action="{{ url_for('delete_cliente', id=cliente.id_cliente) }}" method="POST">
-                                <button type="submit" class="btn btn-color2">Excluir</button>
+                                <button type="submit" class="btn btn-color2 text-white">Excluir</button>
                             </form>
+                            <button type="button" class="btn btn-color3" data-dismiss="modal">Cancelar</button>
                         </div>
                     </div>
                 </div>

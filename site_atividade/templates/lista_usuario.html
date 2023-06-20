@@ -111,9 +111,9 @@
                         <div class="modal-footer">
                             <form action="{{ url_for('delete_usuario', id=usuario.id) }}" method="POST">
                                 {{ form_cadastro_usuario.csrf_token }}
-                                <button type="submit" class="btn btn-Secondary">Excluir</button>
+                                <button type="submit" class="btn btn-color2 text-white">Excluir</button>
                             </form>
-                            <a href="{{ url_for('usuarios') }}" class="btn btn-danger">Cancelar</a>
+                            <a href="{{ url_for('usuarios') }}" class="btn btn-color3">Cancelar</a>
                         </div>
                     </div>
                 </div>
@@ -140,8 +140,8 @@
                                     {{ form_editar_usuario.email(class="form-control", value=usuario.email) }}
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Salvar</button>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                                    <button type="submit" class="btn btn-color1 text-white">Salvar</button>
+                                    <button type="button" class="btn btn-color2 text-white" data-dismiss="modal">Fechar</button>
                                 </div>
                             </form>
                         </div>

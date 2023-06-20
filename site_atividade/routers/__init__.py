@@ -296,7 +296,7 @@ def adicionar_item_venda():
 
 
 
-@app.route('/pagamento', methods=['GET', 'POST'])
+@app.route("/pagamento", methods=['GET', 'POST'])
 @login_required
 def pagamento():
     vendas = Venda.query.all()
@@ -321,7 +321,7 @@ def pagamento():
     return render_template('pagamento.html', form=form, total=total)
 
 
-@app.route('/confirmar_pagamento', methods=['GET', 'POST'])
+@app.route("/confirmar_pagamento", methods=['GET', 'POST'])
 @login_required
 def confirmar_pagamento():
     form = PagamentoForm()
@@ -344,8 +344,7 @@ def confirmar_pagamento():
         database.session.add(pagamento)
         database.session.commit()
 
-        database.session.query(ItemVenda).delete()
-        database.session.commit()
+        
 
         return render_template('confirmacao_pagamento.html', pagamento=pagamento, total=total)
 
@@ -354,7 +353,7 @@ def confirmar_pagamento():
 
 
 
-@app.route('/obter_ultimo_pagamento', methods=['GET'])
+@app.route("/obter_ultimo_pagamento", methods=['GET'])
 @login_required
 def obter_ultimo_pagamento():
     ultimo_pagamento = Pagamento.query.order_by(desc(Pagamento.id_pagamento)).first()
@@ -362,7 +361,7 @@ def obter_ultimo_pagamento():
     # Verifica se existe um último pagamento
     if ultimo_pagamento:
         vendas = Venda.query.all()
-        valor_total_vendas = sum([venda.total for venda in vendas])
+        valor_total_vendas = sum([item_venda.total for venda in vendas for item_venda in venda.itens_venda])
         troco = ultimo_pagamento.troco
 
         # Cria um dicionário com as informações do último pagamento
