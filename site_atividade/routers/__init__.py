@@ -245,7 +245,7 @@ def vendas():
 @app.route("/adicionar_venda", methods=['POST'])
 @login_required
 def adicionar_venda():
-    print('Rota /adicionar_venda chamada')
+    
     cliente_id = request.form.get('cliente_id') # Obtém o ID do cliente selecionado
     cliente = Cliente.query.get(cliente_id)
 
@@ -256,7 +256,7 @@ def adicionar_venda():
     database.session.add(venda)
     database.session.commit()
 
-    flash(f'{cliente.nome} selecionado com sucesso', 'success')
+    
 
     return jsonify({'success': True})
 
