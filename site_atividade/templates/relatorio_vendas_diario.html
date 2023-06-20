@@ -1,26 +1,39 @@
 {% extends 'base.html' %}
 
 {% block body %}
-  <h1>Relatório de Vendas Diário - {{ data_atual }}</h1>
+<div class="container theme-showcase" role="main">
+<h1>Relatório de Vendas Diário</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID Venda</th>
-        <th>Produto</th>
-        <th>Quantidade</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for venda in vendas %}
-      <tr>
-        <td>{{ venda.id_venda }}</td>
-        <td>{{ venda.produto.produto }}</td>
-        <td>{{ venda.quantidade }}</td>
-        <td>{{ venda.total }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<br>
+
+<form class="form-inline" action="{{ url_for('relatorio_vendas_diario') }}" method="GET">
+  <div class="form-group mx-sm-3 mb-2 d-flex align-items-center">
+    <label for="data" class="mr-2 mb-0 font-weight-bold" style="font-size: 1.2rem; text-align: center;">Selecione uma data:</label>
+    <input type="date" class="form-control mr-2 date-input" id="data" name="data" required>
+    <button type="submit" class="btn btn-color3">Gerar Relatório</button>
+  </div>
+</form>
+
+
+
+
+
+
+
+
+{% if vendas %}
+  <br>
+  <h2>Dia selecionado: {{ data_atual }}</h2>
+
+  <!-- Incluir o código do gráfico de barras aqui -->
+  <div>
+    {{ graph_html|safe }}
+  </div>
+
+
+{% endif %}
+
+</div>
+  
 {% endblock %}
+

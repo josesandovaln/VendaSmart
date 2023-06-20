@@ -13,6 +13,10 @@ from site_atividade import app, database, bcrypt
 from site_atividade.models import Usuario, Produtos, Categoria, Venda, Pagamento, ItemVenda, Cliente
 from flask_login import login_user, logout_user, login_required
 
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+
 
 @app.route("/", methods=['GET', 'POST'])
 def login():
@@ -499,10 +503,49 @@ def send_support_request_email(subject, description):
 @app.route("/relatorio_vendas_diario")
 @login_required
 def relatorio_vendas_diario():
-    data_atual = datetime.now().date()
-    vendas = Venda.query.filter(Venda.data_venda == data_atual).all()
+    data_selecionada = request.args.get('data')
+    
+    if data_selecionada:
+        # Converter a data selecionada para o formato Date
+        data_selecionada = datetime.strptime(data_selecionada, '%Y-%m-%d').date()
+        vendas = Venda.query.filter(Venda.data_venda == data_selecionada).all()
+        
+        # Dados para o gráfico de barras
+        produtos = []
+        quantidades = []
+        valores_totais = []
+        for venda in vendas:
+            for item_venda in venda.itens_venda:
+                produtos.append(item_venda.produto.produto)
+                quantidades.append(item_venda.quantidade)
+                valores_totais.append(item_venda.total)
+        
+        valor_total_vendas = sum(valores_totais)
+        
+        # Criar o gráfico de barras e configurar o layout
+        
+        # Converter o gráfico para HTML
+        fig = go.Figure(data=[go.Bar(x=produtos, y=quantidades, text=valores_totais, textposition='auto', marker=dict(color='#DC236D'))])
+        fig.update_layout(
+                          xaxis_title="Produto",
+                          yaxis_title="Quantidade Vendida")
+        
+        fig.add_annotation(xref='x', yref='paper', x=0.0, y=-0.07,
+                       text=f"<b>Total Vendas: R$ {valor_total_vendas:.2f}</b>",
+                       showarrow=False,
+                       font=dict(color='black', size=16),  # Aumente o tamanho da fonte aqui
+                       xanchor='center')
+        
+        graph_html = fig.to_html(full_html=False)
+        
+        return render_template('relatorio_vendas_diario.html', vendas=vendas, data_atual=data_selecionada, graph_html=graph_html)
+    
+    return render_template('relatorio_vendas_diario.html')
 
-    return render_template('relatorio_vendas_diario.html', vendas=vendas, data_atual=data_atual)
+
+
+
+
 
 
 
