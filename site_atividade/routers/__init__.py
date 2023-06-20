@@ -1,22 +1,15 @@
 from datetime import datetime
-
 import mail
-from flask import render_template, url_for, redirect, flash, request, get_template_attribute, jsonify, \
-    render_template_string, current_app, session
+from flask import render_template, url_for, redirect, flash, request, jsonify, \
+    render_template_string, current_app
 from flask_mail import Message
-
 from sqlalchemy import desc
-
-from site_atividade.forms import FormLogin, FormCadastroUsuario, FormListarUsuario, VendasForm, PagamentoForm, \
+from site_atividade.forms import FormLogin, FormCadastroUsuario, PagamentoForm, \
     FormEditarUsuario, FormAtualizarSenha, HelpDeskForm
 from site_atividade import app, database, bcrypt
 from site_atividade.models import Usuario, Produtos, Categoria, Venda, Pagamento, ItemVenda, Cliente
 from flask_login import login_user, logout_user, login_required
-
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-
-
 
 @app.route("/", methods=['GET', 'POST'])
 def login():
