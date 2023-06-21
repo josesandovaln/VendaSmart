@@ -6,13 +6,13 @@ Esta é uma aplicação construida para a disciplina de TCC, consiste em uma apl
 
 ## Layout
 
-![Login]()
+![Login](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/Login-vendaSmart.jpg)
 
-![usuário]()
+![usuário](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/Usuario-vendaSmart.jpg)
 
-![Produto]()
+![Produto](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/Produto-vendaSmart.jpg)
 
-![PDV]()
+![Venda](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/Vendas-vendaSmart.jpg)
 
 ## Código
 
