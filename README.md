@@ -1,18 +1,18 @@
-# Aplicação Supermercado 
+# VendaSmart
 
 # Sobre o projeto
 
-Esta é uma aplicação construida para a disciplina de Desenvolvimento de Sistemas II, consiste em uma aplicação desenvolvida em Python utilizando o framework Flask, onde é feito um CRUD para definir as rotas da aplicação assim como sua funcionalidade com o Banco de dados.
+Esta é uma aplicação construida para a disciplina de TCC, consiste em uma aplicação web que utiliza Python com o framework Flask para criar um sistema voltado para mercados pequenos. A aplicação inclui funcionalidades como CRUD (Create, Read, Update, Delete) para produtos, clientes e usuários, além de recursos para venda, pagamento, relatórios e helpdesk.
 
 ## Layout
 
-![Login](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/login.jpg)
+![Login]()
 
-![Cadastrar usuário](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/cadastro_usuario.jpg)
+![usuário]()
 
-![Produto](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/produtos.jpg)
+![Produto]()
 
-![PDV](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/PDV.jpg)
+![PDV]()
 
 ## Código
 
@@ -20,13 +20,14 @@ Esta é uma aplicação construida para a disciplina de Desenvolvimento de Siste
 
 ![rotas-produto](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/rota_produto.png)
 
-![rotas-venda](https://github.com/josesandovaln/Supermarket-Application/blob/main/assests/image/rota_venda.png)
 
 ## Tecnologias utilizadas
 
 - Python
 - Flask (framework)
 - JavaScript
+- Banco de dados (SQLite)
+- Bootstrap 5.3
 
 # Autores
 
